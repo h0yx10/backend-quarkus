@@ -1,0 +1,13 @@
+{
+  "module": "docker",
+  "status": "PARTIAL",
+  "timestamp": "2026-10-07T18:44:02.622161+00:00",
+  "summary": "Multi-stage non-root JVM Dockerfile and app-only Compose prepared; execution pending runtime",
+  "validator": {
+    "passed": 0,
+    "total": 1
+  },
+  "notes": [
+    "Docker/Podman unavailable"
+  ]
+}

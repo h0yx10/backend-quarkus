@@ -1,0 +1,328 @@
+com.events:events-api:jar:1.0.0
++- org.postgresql:postgresql:jar:42.7.13:runtime
++- com.tngtech.archunit:archunit-junit5:jar:1.2.1:test
+|  +- com.tngtech.archunit:archunit-junit5-api:jar:1.2.1:test
+|  |  \- com.tngtech.archunit:archunit:jar:1.2.1:test
+|  \- com.tngtech.archunit:archunit-junit5-engine:jar:1.2.1:test
+|     \- com.tngtech.archunit:archunit-junit5-engine-api:jar:1.2.1:test
+|        \- org.junit.platform:junit-platform-engine:jar:6.1.3:test
++- io.quarkus:quarkus-rest-jackson:jar:3.40.1:compile
+|  +- io.quarkus:quarkus-rest:jar:3.40.1:compile
+|  |  +- io.quarkus:quarkus-rest-common:jar:3.40.1:compile
+|  |  |  \- io.quarkus.resteasy.reactive:resteasy-reactive-common:jar:3.40.1:compile
+|  |  |     \- io.quarkus.resteasy.reactive:resteasy-reactive-common-types:jar:3.40.1:compile
+|  |  +- io.quarkus.resteasy.reactive:resteasy-reactive-vertx:jar:3.40.1:compile
+|  |  |  +- io.smallrye.reactive:smallrye-mutiny-vertx-core:jar:3.23.1:compile
+|  |  |  |  \- io.smallrye.reactive:smallrye-mutiny-vertx-runtime:jar:3.23.1:compile
+|  |  |  +- io.quarkus.resteasy.reactive:resteasy-reactive:jar:3.40.1:compile
+|  |  |  \- io.quarkus.vertx.utils:quarkus-vertx-utils:jar:3.40.1:compile
+|  |  \- io.quarkus:quarkus-virtual-threads:jar:3.40.1:compile
+|  |     \- io.vertx:vertx-core:jar:4.5.34:compile
+|  |        +- io.netty:netty-common:jar:4.1.138.Final:compile
+|  |        +- io.netty:netty-buffer:jar:4.1.138.Final:compile
+|  |        +- io.netty:netty-transport:jar:4.1.138.Final:compile
+|  |        +- io.netty:netty-handler:jar:4.1.138.Final:compile
+|  |        |  \- io.netty:netty-transport-native-unix-common:jar:4.1.138.Final:compile
+|  |        +- io.netty:netty-handler-proxy:jar:4.1.138.Final:compile
+|  |        |  \- io.netty:netty-codec-socks:jar:4.1.138.Final:compile
+|  |        +- io.netty:netty-codec-http:jar:4.1.138.Final:compile
+|  |        +- io.netty:netty-codec-http2:jar:4.1.138.Final:compile
+|  |        +- io.netty:netty-resolver:jar:4.1.138.Final:compile
+|  |        +- io.netty:netty-resolver-dns:jar:4.1.138.Final:compile
+|  |        |  \- io.netty:netty-codec-dns:jar:4.1.138.Final:compile
+|  |        \- io.netty:netty-tcnative-classes:jar:2.0.84.Final:compile
+|  \- io.quarkus:quarkus-rest-jackson-common:jar:3.40.1:compile
+|     +- io.quarkus.resteasy.reactive:resteasy-reactive-jackson:jar:3.40.1:compile
+|     \- io.quarkus:quarkus-jackson:jar:3.40.1:compile
+|        +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.21.7:compile
+|        +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.21.7:compile
+|        \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.21.7:compile
++- io.quarkus:quarkus-hibernate-validator:jar:3.40.1:compile
+|  +- io.quarkus:quarkus-core:jar:3.40.1:compile
+|  |  +- jakarta.enterprise:jakarta.enterprise.cdi-api:jar:4.1.0:compile
+|  |  |  \- jakarta.enterprise:jakarta.enterprise.lang-model:jar:4.1.0:compile
+|  |  +- jakarta.inject:jakarta.inject-api:jar:2.0.1:compile
+|  |  +- io.smallrye.common:smallrye-common-os:jar:2.19.0:compile
+|  |  +- io.quarkus:quarkus-ide-launcher:jar:3.40.1:compile
+|  |  +- io.quarkus:quarkus-development-mode-spi:jar:3.40.1:compile
+|  |  +- io.smallrye.config:smallrye-config:jar:3.17.2:compile
+|  |  |  \- io.smallrye.config:smallrye-config-core:jar:3.17.2:compile
+|  |  |     \- io.smallrye.config:smallrye-config-common:jar:3.17.2:compile
+|  |  +- org.jboss.logging:jboss-logging:jar:3.6.3.Final:compile
+|  |  +- org.jboss.logmanager:jboss-logmanager:jar:3.2.2.Final:compile
+|  |  |  +- io.smallrye.common:smallrye-common-constraint:jar:2.19.0:compile
+|  |  |  +- io.smallrye.common:smallrye-common-cpu:jar:2.19.0:compile
+|  |  |  +- io.smallrye.common:smallrye-common-expression:jar:2.19.0:compile
+|  |  |  +- io.smallrye.common:smallrye-common-net:jar:2.19.0:compile
+|  |  |  \- io.smallrye.common:smallrye-common-ref:jar:2.19.0:compile
+|  |  +- org.jboss.threads:jboss-threads:jar:3.9.2:compile
+|  |  |  +- io.smallrye.common:smallrye-common-annotation:jar:2.19.0:compile
+|  |  |  \- io.smallrye.common:smallrye-common-function:jar:2.19.0:compile
+|  |  +- org.slf4j:slf4j-api:jar:2.0.18:compile
+|  |  +- org.jboss.slf4j:slf4j-jboss-logmanager:jar:2.0.2.Final:compile
+|  |  +- org.wildfly.common:wildfly-common:jar:2.0.1:compile
+|  |  +- io.quarkus:quarkus-value-registry:jar:3.40.1:compile
+|  |  +- io.quarkus:quarkus-bootstrap-runner:jar:3.40.1:compile
+|  |  \- io.quarkus:quarkus-fs-util:jar:1.4.2:compile
+|  +- io.quarkus:quarkus-arc:jar:3.40.1:compile
+|  |  +- io.quarkus.arc:arc:jar:3.40.1:compile
+|  |  \- org.eclipse.microprofile.context-propagation:microprofile-context-propagation-api:jar:1.3:compile
+|  +- org.hibernate.validator:hibernate-validator:jar:9.1.3.Final:compile
+|  |  +- jakarta.validation:jakarta.validation-api:jar:3.1.1:compile
+|  |  \- com.fasterxml:classmate:jar:1.7.1:compile
+|  +- org.glassfish.expressly:expressly:jar:6.0.0:compile
+|  |  \- jakarta.el:jakarta.el-api:jar:6.0.1:compile
+|  +- io.smallrye.config:smallrye-config-validator:jar:3.17.2:compile
+|  \- jakarta.ws.rs:jakarta.ws.rs-api:jar:3.1.0:compile
++- io.quarkus:quarkus-hibernate-orm:jar:3.40.1:compile
+|  +- io.quarkus:quarkus-agroal:jar:3.40.1:compile
+|  |  +- io.quarkus:quarkus-datasource:jar:3.40.1:compile
+|  |  |  \- io.quarkus:quarkus-devservices:jar:3.40.1:compile
+|  |  +- io.agroal:agroal-api:jar:3.2.1:compile
+|  |  +- io.agroal:agroal-narayana:jar:3.2.1:compile
+|  |  +- io.agroal:agroal-pool:jar:3.2.1:compile
+|  |  \- io.quarkus:quarkus-credentials:jar:3.40.1:compile
+|  +- org.hibernate.orm:hibernate-core:jar:7.4.9.Final:compile
+|  |  +- org.hibernate.models:hibernate-models:jar:1.1.2:runtime
+|  |  \- org.antlr:antlr4-runtime:jar:4.13.2:runtime
+|  +- org.hibernate.orm:hibernate-graalvm:jar:7.4.9.Final:compile
+|  +- org.glassfish.jaxb:jaxb-runtime:jar:4.0.9:compile
+|  |  \- org.glassfish.jaxb:jaxb-core:jar:4.0.9:compile
+|  |     +- org.eclipse.angus:angus-activation:jar:2.0.3:runtime
+|  |     +- org.glassfish.jaxb:txw2:jar:4.0.9:compile
+|  |     \- com.sun.istack:istack-commons-runtime:jar:4.1.2:compile
+|  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.5:compile
+|  |  \- jakarta.activation:jakarta.activation-api:jar:2.1.4:compile
+|  +- jakarta.persistence:jakarta.persistence-api:jar:3.2.0:compile
+|  +- jakarta.transaction:jakarta.transaction-api:jar:2.0.1:compile
+|  +- org.hibernate.orm:hibernate-jcache:jar:7.4.9.Final:compile
+|  |  \- javax.cache:cache-api:jar:1.1.1:compile
+|  +- com.github.ben-manes.caffeine:jcache:jar:3.2.4:compile
+|  |  +- com.github.ben-manes.caffeine:caffeine:jar:3.2.4:compile
+|  |  |  \- com.google.errorprone:error_prone_annotations:jar:2.49.0:compile
+|  |  +- org.osgi:org.osgi.service.component.annotations:jar:1.5.1:compile
+|  |  |  +- org.osgi:osgi.annotation:jar:8.1.0:compile
+|  |  |  +- org.osgi:org.osgi.namespace.extender:jar:1.0.1:compile
+|  |  |  +- org.osgi:org.osgi.util.function:jar:1.0.0:compile
+|  |  |  \- org.osgi:org.osgi.util.promise:jar:1.0.0:compile
+|  |  \- com.typesafe:config:jar:1.4.7:compile
+|  \- io.quarkus:quarkus-caffeine:jar:3.40.1:compile
++- io.quarkus:quarkus-jdbc-postgresql:jar:3.40.1:compile
++- io.quarkus:quarkus-narayana-jta:jar:3.40.1:compile
+|  +- io.quarkus:quarkus-transaction-annotations:jar:3.40.1:compile
+|  +- io.quarkus:quarkus-mutiny:jar:3.40.1:compile
+|  |  +- io.smallrye.reactive:mutiny:jar:3.3.0:compile
+|  |  |  \- org.jctools:jctools-core:jar:4.0.5:compile
+|  |  +- io.quarkus:quarkus-smallrye-context-propagation:jar:3.40.1:compile
+|  |  |  \- io.smallrye:smallrye-context-propagation:jar:2.3.0:compile
+|  |  |     +- io.smallrye:smallrye-context-propagation-api:jar:2.3.0:compile
+|  |  |     \- io.smallrye:smallrye-context-propagation-storage:jar:2.3.0:compile
+|  |  \- io.smallrye.reactive:mutiny-smallrye-context-propagation:jar:3.3.0:compile
+|  +- io.quarkus:quarkus-datasource-common:jar:3.40.1:compile
+|  +- io.smallrye:smallrye-context-propagation-jta:jar:2.3.0:compile
+|  +- io.smallrye.reactive:smallrye-reactive-converter-api:jar:3.0.3:compile
+|  |  \- org.reactivestreams:reactive-streams:jar:1.0.4:compile
+|  +- io.smallrye.reactive:smallrye-reactive-converter-mutiny:jar:3.0.3:compile
+|  +- io.smallrye.reactive:mutiny-zero-flow-adapters:jar:1.2.1:compile
+|  |  \- org.jspecify:jspecify:jar:1.0.0:compile
+|  +- org.jboss.narayana.jta:narayana-jta:jar:7.3.4.Final:compile
+|  +- org.jboss:jboss-transaction-spi:jar:8.0.0.Final:compile
+|  |  \- jakarta.resource:jakarta.resource-api:jar:2.1.0:compile
+|  \- org.jboss.narayana.jts:narayana-jts-integration:jar:7.3.4.Final:compile
++- io.quarkus:quarkus-smallrye-jwt:jar:3.40.1:compile
+|  +- io.smallrye:smallrye-jwt:jar:4.6.4:compile
+|  |  +- org.eclipse.microprofile.config:microprofile-config-api:jar:3.1.1:compile
+|  |  +- org.eclipse.microprofile.jwt:microprofile-jwt-auth-api:jar:2.1:compile
+|  |  +- org.bitbucket.b_c:jose4j:jar:0.9.6:compile
+|  |  \- io.smallrye:smallrye-jwt-common:jar:4.6.4:compile
+|  +- jakarta.annotation:jakarta.annotation-api:jar:3.0.0:compile
+|  +- io.quarkus:quarkus-vertx-http:jar:3.40.1:compile
+|  |  +- io.quarkus:quarkus-security-runtime-spi:jar:3.40.1:compile
+|  |  +- io.quarkus:quarkus-tls-registry:jar:3.40.1:compile
+|  |  |  +- io.quarkus:quarkus-tls-registry-spi:jar:3.40.1:compile
+|  |  |  \- io.smallrye.certs:smallrye-private-key-pem-parser:jar:0.9.4:compile
+|  |  +- io.smallrye.common:smallrye-common-vertx-context:jar:2.19.0:compile
+|  |  +- io.quarkus.security:quarkus-security:jar:2.3.2:compile
+|  |  +- io.quarkus:quarkus-vertx:jar:3.40.1:compile
+|  |  |  +- io.quarkus:quarkus-netty:jar:3.40.1:compile
+|  |  |  |  \- io.netty:netty-codec:jar:4.1.138.Final:compile
+|  |  |  +- io.netty:netty-codec-haproxy:jar:4.1.138.Final:compile
+|  |  |  +- io.quarkus:quarkus-vertx-latebound-mdc-provider:jar:3.40.1:compile
+|  |  |  \- io.smallrye:smallrye-fault-tolerance-vertx:jar:6.11.4:compile
+|  |  +- io.smallrye.reactive:smallrye-mutiny-vertx-web:jar:3.23.1:compile
+|  |  |  +- io.smallrye.reactive:smallrye-mutiny-vertx-web-common:jar:3.23.1:compile
+|  |  |  +- io.smallrye.reactive:smallrye-mutiny-vertx-auth-common:jar:3.23.1:compile
+|  |  |  +- io.smallrye.reactive:smallrye-mutiny-vertx-bridge-common:jar:3.23.1:compile
+|  |  |  \- io.smallrye.reactive:smallrye-mutiny-vertx-uri-template:jar:3.23.1:compile
+|  |  |     \- io.vertx:vertx-uri-template:jar:4.5.34:compile
+|  |  +- io.vertx:vertx-web:jar:4.5.34:compile
+|  |  |  +- io.vertx:vertx-web-common:jar:4.5.34:compile
+|  |  |  +- io.vertx:vertx-auth-common:jar:4.5.34:compile
+|  |  |  \- io.vertx:vertx-bridge-common:jar:4.5.34:compile
+|  |  +- org.crac:crac:jar:1.5.0:compile
+|  |  \- com.aayushatharva.brotli4j:brotli4j:jar:1.23.0:compile
+|  |     +- com.aayushatharva.brotli4j:service:jar:1.23.0:compile
+|  |     \- com.aayushatharva.brotli4j:native-linux-x86_64:jar:1.23.0:compile
+|  +- io.quarkus:quarkus-security:jar:3.40.1:compile
+|  |  \- jakarta.interceptor:jakarta.interceptor-api:jar:2.2.0:compile
+|  \- io.quarkus:quarkus-jsonp:jar:3.40.1:compile
+|     \- org.eclipse.parsson:parsson:jar:1.1.9:compile
++- io.quarkus:quarkus-smallrye-jwt-build:jar:3.40.1:compile
+|  \- io.smallrye:smallrye-jwt-build:jar:4.6.4:compile
++- io.quarkus:quarkus-elytron-security-common:jar:3.40.1:compile
+|  +- org.wildfly.security:wildfly-elytron-credential:jar:2.9.2.SP1:compile
+|  |  +- org.wildfly.security:wildfly-elytron-asn1:jar:2.9.2.SP1:compile
+|  |  +- org.wildfly.security:wildfly-elytron-keystore:jar:2.9.2.SP1:compile
+|  |  |  +- org.wildfly.security:wildfly-elytron-util:jar:2.9.2.SP1:compile
+|  |  |  |  \- org.wildfly.security:wildfly-elytron-base:jar:2.9.2.SP1:compile
+|  |  |  \- org.wildfly.security:wildfly-elytron-x500-cert:jar:2.9.2.SP1:compile
+|  |  |     \- org.wildfly.security:wildfly-elytron-x500-cert-util:jar:2.9.2.SP1:compile
+|  |  +- org.wildfly.security:wildfly-elytron-provider-util:jar:2.9.2.SP1:compile
+|  |  \- org.wildfly.security:wildfly-elytron-x500:jar:2.9.2.SP1:compile
+|  \- org.wildfly.security:wildfly-elytron-password-impl:jar:2.9.2.SP1:compile
++- io.quarkus:quarkus-smallrye-openapi:jar:3.40.1:compile
+|  +- io.smallrye:smallrye-open-api-core:jar:4.3.5:compile
+|  |  +- org.eclipse.microprofile.openapi:microprofile-openapi-api:jar:4.1.1:compile
+|  |  +- io.smallrye:smallrye-open-api-model:jar:4.3.5:compile
+|  |  +- com.fasterxml.jackson.core:jackson-core:jar:2.21.7:compile
+|  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.21.7:compile
+|  |  |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.21:compile
+|  |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.21.7:compile
+|  |  |  \- org.yaml:snakeyaml:jar:2.6:compile
+|  |  +- io.smallrye:jandex:jar:3.6.0:compile
+|  |  \- io.smallrye.common:smallrye-common-classloader:jar:2.19.0:compile
+|  \- io.quarkus:quarkus-swagger-ui:jar:3.40.1:compile
++- io.quarkus:quarkus-smallrye-health:jar:3.40.1:compile
+|  +- io.smallrye:smallrye-health:jar:4.3.0:compile
+|  |  +- org.eclipse.microprofile.health:microprofile-health-api:jar:4.0.1:compile
+|  |  +- io.smallrye:smallrye-health-api:jar:4.3.0:compile
+|  |  \- jakarta.json:jakarta.json-api:jar:2.1.3:compile
+|  \- io.smallrye:smallrye-health-provided-checks:jar:4.3.0:compile
++- io.quarkus:quarkus-jdbc-h2:jar:3.40.1:test
+|  +- com.h2database:h2:jar:2.4.240:test
+|  \- org.locationtech.jts:jts-core:jar:1.19.0:test
++- io.quarkus:quarkus-junit:jar:3.40.1:test
+|  +- io.quarkus:quarkus-bootstrap-core:jar:3.40.1:test
+|  |  +- io.quarkus:quarkus-classloader-commons:jar:3.40.1:compile
+|  |  +- io.quarkus:quarkus-bootstrap-app-model:jar:3.40.1:test
+|  |  |  \- io.smallrye.classfile:jdk-classfile-backport:jar:26:test
+|  |  +- io.quarkus:quarkus-bootstrap-json:jar:3.40.1:test
+|  |  \- io.smallrye.common:smallrye-common-io:jar:2.19.0:compile
+|  |     \- io.smallrye.common:smallrye-common-search:jar:2.19.0:compile
+|  +- org.eclipse.sisu:org.eclipse.sisu.inject:jar:1.0.1:test
+|  |  \- org.ow2.asm:asm:jar:9.10.1:test
+|  +- io.quarkus:quarkus-test-common:jar:3.40.1:test
+|  |  +- io.quarkus:quarkus-core-deployment:jar:3.40.1:test
+|  |  |  +- org.aesh:readline:jar:3.18.1:test
+|  |  |  |  +- org.aesh:terminal-api:jar:3.18.1:test
+|  |  |  |  |  \- org.aesh:terminal-detect:jar:3.18.1:test
+|  |  |  |  +- org.aesh:readline-api:jar:3.18.1:test
+|  |  |  |  \- org.aesh:terminal-tty:jar:3.18.1:test
+|  |  |  +- org.aesh:aesh:jar:3.18.2:test
+|  |  |  +- org.apache.commons:commons-compress:jar:1.28.0:test
+|  |  |  +- io.quarkus.gizmo:gizmo:jar:1.10.1:test
+|  |  |  |  \- org.ow2.asm:asm-util:jar:9.10.1:test
+|  |  |  |     \- org.ow2.asm:asm-analysis:jar:9.10.1:test
+|  |  |  +- io.quarkus.gizmo:gizmo2:jar:2.1.1:test
+|  |  |  |  \- io.smallrye.common:smallrye-common-resource:jar:2.19.0:test
+|  |  |  +- io.smallrye:jandex-gizmo2:jar:3.6.0:test
+|  |  |  +- io.smallrye.common:smallrye-common-process:jar:2.19.0:test
+|  |  |  +- io.quarkus:quarkus-hibernate-validator-spi:jar:3.40.1:test
+|  |  |  +- io.quarkus:quarkus-class-change-agent:jar:3.40.1:test
+|  |  |  +- io.quarkus:quarkus-builder:jar:3.40.1:test
+|  |  |  +- org.graalvm.sdk:nativeimage:jar:25.0.4.1:test
+|  |  |  |  \- org.graalvm.sdk:word:jar:25.0.4.1:test
+|  |  |  \- org.junit.platform:junit-platform-launcher:jar:6.1.3:test
+|  |  +- io.quarkus:quarkus-bootstrap-maven-resolver:jar:3.40.1:test
+|  |  |  +- io.smallrye.beanbag:smallrye-beanbag-maven:jar:1.6.1:test
+|  |  |  |  +- io.smallrye.beanbag:smallrye-beanbag-sisu:jar:1.6.1:test
+|  |  |  |  |  \- io.smallrye.beanbag:smallrye-beanbag:jar:1.6.1:test
+|  |  |  |  +- javax.inject:javax.inject:jar:1:test
+|  |  |  |  +- org.apache.maven:maven-artifact:jar:3.9.16:test
+|  |  |  |  +- org.apache.maven:maven-builder-support:jar:3.9.16:test
+|  |  |  |  +- org.apache.maven:maven-model:jar:3.9.16:test
+|  |  |  |  +- org.apache.maven:maven-model-builder:jar:3.9.16:test
+|  |  |  |  +- org.apache.maven:maven-repository-metadata:jar:3.9.16:test
+|  |  |  |  +- org.apache.maven:maven-settings:jar:3.9.16:test
+|  |  |  |  +- org.apache.maven.resolver:maven-resolver-api:jar:1.9.27:test
+|  |  |  |  +- org.apache.maven.resolver:maven-resolver-impl:jar:1.9.27:test
+|  |  |  |  |  \- org.apache.maven.resolver:maven-resolver-named-locks:jar:1.9.27:test
+|  |  |  |  +- org.apache.maven.resolver:maven-resolver-spi:jar:1.9.27:test
+|  |  |  |  +- org.apache.maven.resolver:maven-resolver-util:jar:1.9.27:test
+|  |  |  |  +- org.codehaus.plexus:plexus-interpolation:jar:1.26:test
+|  |  |  |  +- org.codehaus.plexus:plexus-utils:jar:3.6.1:test
+|  |  |  |  +- org.codehaus.plexus:plexus-xml:jar:4.0.2:test
+|  |  |  |  |  \- org.apache.maven:maven-xml-impl:jar:4.0.0-alpha-7:test
+|  |  |  |  |     \- org.apache.maven:maven-api-xml:jar:4.0.0-alpha-7:test
+|  |  |  |  |        \- org.apache.maven:maven-api-meta:jar:4.0.0-alpha-7:test
+|  |  |  |  +- org.codehaus.plexus:plexus-cipher:jar:2.0:test
+|  |  |  |  \- org.codehaus.plexus:plexus-sec-dispatcher:jar:2.0:test
+|  |  |  +- io.quarkus:quarkus-bootstrap-maven4-resolver:jar:3.40.1:test
+|  |  |  +- org.apache.maven:maven-embedder:jar:3.9.16:test
+|  |  |  |  +- org.apache.maven:maven-core:jar:3.9.16:test
+|  |  |  |  |  \- org.codehaus.plexus:plexus-component-annotations:jar:2.1.0:test
+|  |  |  |  +- org.apache.maven:maven-plugin-api:jar:3.9.16:test
+|  |  |  |  +- org.apache.maven.shared:maven-shared-utils:jar:3.4.2:test
+|  |  |  |  +- com.google.inject:guice:jar:classes:5.1.0:test
+|  |  |  |  |  \- aopalliance:aopalliance:jar:1.0:test
+|  |  |  |  +- com.google.guava:guava:jar:33.6.0-jre:test
+|  |  |  |  +- com.google.guava:failureaccess:jar:1.0.1:test
+|  |  |  |  +- javax.annotation:javax.annotation-api:jar:1.3.2:test
+|  |  |  |  +- org.codehaus.plexus:plexus-classworlds:jar:2.6.0:test
+|  |  |  |  \- commons-cli:commons-cli:jar:1.11.0:test
+|  |  |  +- org.eclipse.sisu:org.eclipse.sisu.plexus:jar:1.0.1:test
+|  |  |  +- org.apache.maven:maven-settings-builder:jar:3.9.16:test
+|  |  |  +- org.apache.maven:maven-resolver-provider:jar:3.9.16:test
+|  |  |  +- org.apache.maven.resolver:maven-resolver-connector-basic:jar:1.9.27:test
+|  |  |  +- org.apache.maven.resolver:maven-resolver-transport-http:jar:1.9.27:test
+|  |  |  |  \- com.google.code.gson:gson:jar:2.14.0:test
+|  |  |  \- org.apache.maven.resolver:maven-resolver-transport-file:jar:1.9.27:test
+|  |  +- io.quarkus:quarkus-bootstrap-gradle-resolver:jar:3.40.1:test
+|  |  +- commons-io:commons-io:jar:2.22.0:test
+|  |  \- org.jboss.logging:commons-logging-jboss-logging:jar:2.0.0.Final:compile
+|  +- io.quarkus:quarkus-junit-config:jar:3.40.1:test
+|  |  \- org.junit.jupiter:junit-jupiter-api:jar:6.1.3:test
+|  |     +- org.opentest4j:opentest4j:jar:1.3.0:test
+|  |     +- org.junit.platform:junit-platform-commons:jar:6.1.3:test
+|  |     \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+|  +- io.quarkus:quarkus-junit-common:jar:3.40.1:test
+|  |  +- org.junit.jupiter:junit-jupiter-params:jar:6.1.3:test
+|  |  \- org.junit.jupiter:junit-jupiter-engine:jar:6.1.3:test
+|  \- org.junit.jupiter:junit-jupiter:jar:6.1.3:test
++- io.quarkus:quarkus-junit-mockito:jar:3.40.1:test
+|  +- org.mockito:mockito-junit-jupiter:jar:5.21.0:test
+|  +- io.quarkus:quarkus-junit-mockito-config:jar:3.40.1:test
+|  \- io.quarkus:quarkus-arc-deployment:jar:3.40.1:test
+|     +- io.quarkus:quarkus-smallrye-context-propagation-spi:jar:3.40.1:test
+|     +- io.quarkus:quarkus-devui-deployment-spi:jar:3.40.1:test
+|     +- io.quarkus:quarkus-arc-dev:jar:3.40.1:test
+|     +- io.quarkus.arc:arc-processor:jar:3.40.1:test
+|     +- io.quarkus:quarkus-arc-test-supplement:jar:3.40.1:test
+|     \- io.quarkus:quarkus-arc-test-supplement-decorator:jar:3.40.1:test
++- io.quarkus:quarkus-jacoco:jar:3.40.1:test
+|  +- org.jacoco:org.jacoco.core:jar:0.8.15:test
+|  |  \- org.ow2.asm:asm-tree:jar:9.10.1:test
+|  +- org.jacoco:org.jacoco.report:jar:0.8.15:test
+|  +- org.jacoco:org.jacoco.agent:jar:0.8.15:test
+|  +- org.jacoco:org.jacoco.agent:jar:runtime:0.8.15:test
+|  \- org.ow2.asm:asm-commons:jar:9.10.1:test
++- io.rest-assured:rest-assured:jar:6.0.1:test
+|  +- org.apache.groovy:groovy:jar:5.0.3:test
+|  +- org.apache.groovy:groovy-xml:jar:5.0.3:test
+|  +- org.apache.httpcomponents:httpclient:jar:4.5.14:test
+|  |  +- org.apache.httpcomponents:httpcore:jar:4.4.16:test
+|  |  \- commons-codec:commons-codec:jar:1.22.1:test
+|  +- org.apache.httpcomponents:httpmime:jar:4.5.14:test
+|  +- org.hamcrest:hamcrest:jar:2.2:test
+|  +- org.ccil.cowan.tagsoup:tagsoup:jar:1.2.1:test
+|  +- io.rest-assured:json-path:jar:6.0.1:test
+|  |  +- org.apache.groovy:groovy-json:jar:5.0.3:test
+|  |  \- io.rest-assured:rest-assured-common:jar:6.0.1:test
+|  \- io.rest-assured:xml-path:jar:6.0.1:test
+|     \- org.apache.commons:commons-lang3:jar:3.20.0:test
++- org.assertj:assertj-core:jar:3.24.2:test
+|  \- net.bytebuddy:byte-buddy:jar:1.18.8:test
++- org.mockito:mockito-core:jar:5.21.0:test
+|  +- net.bytebuddy:byte-buddy-agent:jar:1.18.8:test
+|  \- org.objenesis:objenesis:jar:3.3:test
+\- com.nimbusds:nimbus-jose-jwt:jar:10.9.1:test

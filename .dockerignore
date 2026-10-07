@@ -1,0 +1,13 @@
+target
+.git
+.env
+.env.*
+!.env.example
+.agents
+.claude
+.idea
+.vscode
+docs
+migration-metadata
+migration-reports
+*.md

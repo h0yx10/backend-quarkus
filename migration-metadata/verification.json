@@ -1,0 +1,73 @@
+{
+  "tests": {
+    "tests": 127,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "coveragePercent": {
+    "BRANCH": 86.73,
+    "LINE": 98.62
+  },
+  "sourceChanged": [],
+  "checks": [
+    {
+      "check": "builds",
+      "result": "PASS",
+      "notes": "Maven verify exit 0; fast-jar Java 21"
+    },
+    {
+      "check": "no-spring-deps",
+      "result": "PASS",
+      "notes": "dependency:tree contains no Spring"
+    },
+    {
+      "check": "has-quarkus",
+      "result": "PASS",
+      "notes": "Quarkus BOM/plugin 3.40.1"
+    },
+    {
+      "check": "tests-pass",
+      "result": "PASS",
+      "notes": "{'tests': 127, 'failures': 0, 'errors': 0, 'skipped': 0}"
+    },
+    {
+      "check": "starts-up",
+      "result": "PASS",
+      "notes": "Production fast-jar, PostgreSQL, /q/health /api-docs /swagger-ui/ HTTP 200"
+    },
+    {
+      "check": "no-thymeleaf",
+      "result": "PASS",
+      "notes": "No frontend or template engine"
+    },
+    {
+      "check": "architecture",
+      "result": "PASS",
+      "notes": "ArchUnit pure domain and application"
+    },
+    {
+      "check": "coverage",
+      "result": "PASS",
+      "notes": "{'BRANCH': 86.73, 'LINE': 98.62}"
+    },
+    {
+      "check": "source-unchanged",
+      "result": "PASS",
+      "notes": "218 files SHA256 unchanged"
+    }
+  ],
+  "contractParity": {
+    "cases": 29,
+    "matching": 29,
+    "differences": 0,
+    "dynamicFieldsIgnored": [
+      "timestamp",
+      "accessToken",
+      "createdAt",
+      "doneAt",
+      "UUID values"
+    ]
+  },
+  "applicationSourcesIdentical": true
+}

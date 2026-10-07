@@ -1,0 +1,26 @@
+{
+  "reference": "https://raw.githubusercontent.com/quarkusio/code-with-quarkus-compare/maven-3.40.1/pom.xml",
+  "properties": {
+    "quarkus.platform.version": {
+      "reference": "3.40.1",
+      "target": "3.40.1"
+    },
+    "compiler-plugin.version": {
+      "reference": "3.15.0",
+      "target": "3.15.0"
+    },
+    "surefire-plugin.version": {
+      "reference": "3.5.6",
+      "target": "3.5.6"
+    },
+    "maven.compiler.release": {
+      "reference": "17",
+      "target": "21"
+    },
+    "project.build.sourceEncoding": {
+      "reference": "UTF-8",
+      "target": "UTF-8"
+    }
+  },
+  "decision": "Java 21 and Quarkus 3.40.1 retained as explicitly requested; no automatic version upgrade"
+}

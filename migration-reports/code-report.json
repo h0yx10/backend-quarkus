@@ -1,0 +1,11 @@
+{
+  "module": "code",
+  "status": "SUCCESS",
+  "timestamp": "2026-10-07T18:44:02.622161+00:00",
+  "summary": "Six JPA entities moved to infrastructure; all ports and application sources preserved; CDI, Jakarta REST, Narayana, dynamic JWT authorization",
+  "validator": {
+    "passed": 1,
+    "total": 1
+  },
+  "notes": []
+}

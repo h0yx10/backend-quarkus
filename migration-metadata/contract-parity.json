@@ -1,0 +1,939 @@
+{
+  "cases": 29,
+  "matching": 29,
+  "differences": [],
+  "spring": [
+    {
+      "method": "GET",
+      "path": "/api/events",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Debes iniciar sesion para acceder a este recurso."
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 201,
+      "body": {
+        "success": true,
+        "message": "La cuenta se creo correctamente.",
+        "data": {
+          "tokenType": "Bearer",
+          "expiresIn": 7200,
+          "usuario": {
+            "id": "<UUID>",
+            "organizadorId": "<UUID>",
+            "nombre": "Parity",
+            "correo": "parity@example.com",
+            "roles": [
+              "ORGANIZADOR"
+            ],
+            "activo": true
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Iniciaste sesion correctamente.",
+        "data": {
+          "tokenType": "Bearer",
+          "expiresIn": 7200,
+          "usuario": {
+            "id": "<UUID>",
+            "organizadorId": "<UUID>",
+            "nombre": "Parity",
+            "correo": "parity@example.com",
+            "roles": [
+              "ADMIN",
+              "ORGANIZADOR"
+            ],
+            "activo": true
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El usuario se consulto correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Parity",
+          "correo": "parity@example.com",
+          "roles": [
+            "ADMIN",
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Perfil actualizado correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Parity Updated",
+          "correo": "parity@example.com",
+          "roles": [
+            "ADMIN",
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/users",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Usuarios consultados correctamente.",
+        "data": [
+          {
+            "id": "<UUID>",
+            "organizadorId": "<UUID>",
+            "nombre": "Parity Updated",
+            "correo": "parity@example.com",
+            "roles": [
+              "ADMIN",
+              "ORGANIZADOR"
+            ],
+            "activo": true
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/users",
+      "status": 201,
+      "body": {
+        "success": true,
+        "message": "Usuario creado correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Extra",
+          "correo": "extra@example.com",
+          "roles": [
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/users/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Usuario consultado correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Extra",
+          "correo": "extra@example.com",
+          "roles": [
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/admin/users/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Usuario actualizado correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Extra Updated",
+          "correo": "extra@example.com",
+          "roles": [
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/admin/users/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Usuario eliminado correctamente.",
+        "data": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Los eventos se consultaron correctamente.",
+        "data": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/capacity",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La capacidad diaria se consulto correctamente.",
+        "data": {
+          "limiteHoras": 6,
+          "porDefecto": true,
+          "fecha": null
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/capacity",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La capacidad diaria se actualizo correctamente.",
+        "data": {
+          "limiteHoras": 6,
+          "porDefecto": false,
+          "fecha": "2026-10-07"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/events",
+      "status": 201,
+      "body": {
+        "success": true,
+        "message": "El evento se creo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "nombre": "Test Event",
+          "tipo": "BODA",
+          "cliente": null,
+          "contactoCliente": null,
+          "fechaHora": "2026-10-20T12:00:00",
+          "lugar": null,
+          "plazoLimite": null,
+          "organizadorId": "<UUID>",
+          "subtareas": []
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El evento se consulto correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "nombre": "Test Event",
+          "tipo": "BODA",
+          "cliente": null,
+          "contactoCliente": null,
+          "fechaHora": "2026-10-20T12:00:00",
+          "lugar": null,
+          "plazoLimite": null,
+          "organizadorId": "<UUID>",
+          "subtareas": []
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/events/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El evento se actualizo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "nombre": "Updated Event",
+          "tipo": "BODA",
+          "cliente": null,
+          "contactoCliente": null,
+          "fechaHora": "2026-10-20T12:00:00",
+          "lugar": null,
+          "plazoLimite": null,
+          "organizadorId": "<UUID>",
+          "subtareas": []
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/events/<UUID>/subtasks",
+      "status": 201,
+      "body": {
+        "success": true,
+        "message": "La subtarea se creo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "eventId": "<UUID>",
+          "name": "Confirm catering",
+          "description": "Confirm vegetarian menu",
+          "targetDate": "2026-10-10",
+          "estimatedHours": 2,
+          "status": "PENDING",
+          "note": null
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events/<UUID>/subtasks",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Las subtareas se consultaron correctamente.",
+        "data": [
+          {
+            "id": "<UUID>",
+            "eventId": "<UUID>",
+            "name": "Confirm catering",
+            "description": "Confirm vegetarian menu",
+            "targetDate": "2026-10-10",
+            "estimatedHours": 2.0,
+            "status": "PENDING",
+            "note": null
+          }
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/subtasks/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La subtarea se actualizo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "eventId": "<UUID>",
+          "name": "Confirm catering",
+          "description": "Updated description",
+          "targetDate": "2026-10-10",
+          "estimatedHours": 2.0,
+          "status": "PENDING",
+          "note": null
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/subtasks/<UUID>/conflicts/overload",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La verificacion de sobrecarga se realizo correctamente.",
+        "data": {
+          "conflict": true,
+          "plannedHours": 9,
+          "limitHours": 6.0,
+          "exceedsBy": 3.0
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/subtasks/<UUID>/status",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El estado de la subtarea se actualizo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "eventId": "<UUID>",
+          "name": "Confirm catering",
+          "description": "Updated description",
+          "targetDate": "2026-10-10",
+          "estimatedHours": 2.0,
+          "status": "DONE",
+          "note": null
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events/<UUID>/progress",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El progreso del evento se consulto correctamente.",
+        "data": {
+          "done": 1,
+          "total": 1,
+          "percentage": 100.0
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/today",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La vista Hoy se consulto correctamente.",
+        "data": {
+          "vencidas": [],
+          "paraHoy": [],
+          "proximas": [],
+          "regla": "Se muestran primero las Vencidas, luego las de Hoy y luego las Proximas. Dentro de cada grupo, ordenamos por fecha (la mas antigua o mas cercana primero) y, si hay empate, por menor esfuerzo (horas estimadas)."
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/subtasks/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La subtarea se elimino correctamente.",
+        "data": null
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/events/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El evento se elimino correctamente.",
+        "data": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events/no-es-uuid",
+      "status": 400,
+      "body": {
+        "success": false,
+        "message": "Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: no-es-uuid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 400,
+      "body": {
+        "success": false,
+        "message": "Escribe un correo valido."
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Cerraste sesion correctamente.",
+        "data": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Tu sesion expiro o el token no es valido. Inicia sesion nuevamente."
+      }
+    }
+  ],
+  "quarkus": [
+    {
+      "method": "GET",
+      "path": "/api/events",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Debes iniciar sesion para acceder a este recurso."
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 201,
+      "body": {
+        "success": true,
+        "message": "La cuenta se creo correctamente.",
+        "data": {
+          "tokenType": "Bearer",
+          "expiresIn": 7200,
+          "usuario": {
+            "id": "<UUID>",
+            "organizadorId": "<UUID>",
+            "nombre": "Parity",
+            "correo": "parity@example.com",
+            "roles": [
+              "ORGANIZADOR"
+            ],
+            "activo": true
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Iniciaste sesion correctamente.",
+        "data": {
+          "tokenType": "Bearer",
+          "expiresIn": 7200,
+          "usuario": {
+            "id": "<UUID>",
+            "organizadorId": "<UUID>",
+            "nombre": "Parity",
+            "correo": "parity@example.com",
+            "roles": [
+              "ADMIN",
+              "ORGANIZADOR"
+            ],
+            "activo": true
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El usuario se consulto correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Parity",
+          "correo": "parity@example.com",
+          "roles": [
+            "ADMIN",
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/auth/me",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Perfil actualizado correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Parity Updated",
+          "correo": "parity@example.com",
+          "roles": [
+            "ADMIN",
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/users",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Usuarios consultados correctamente.",
+        "data": [
+          {
+            "id": "<UUID>",
+            "organizadorId": "<UUID>",
+            "nombre": "Parity Updated",
+            "correo": "parity@example.com",
+            "roles": [
+              "ADMIN",
+              "ORGANIZADOR"
+            ],
+            "activo": true
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/admin/users",
+      "status": 201,
+      "body": {
+        "success": true,
+        "message": "Usuario creado correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Extra",
+          "correo": "extra@example.com",
+          "roles": [
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/users/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Usuario consultado correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Extra",
+          "correo": "extra@example.com",
+          "roles": [
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/admin/users/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Usuario actualizado correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "organizadorId": "<UUID>",
+          "nombre": "Extra Updated",
+          "correo": "extra@example.com",
+          "roles": [
+            "ORGANIZADOR"
+          ],
+          "activo": true
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/admin/users/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Usuario eliminado correctamente.",
+        "data": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Los eventos se consultaron correctamente.",
+        "data": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/capacity",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La capacidad diaria se consulto correctamente.",
+        "data": {
+          "limiteHoras": 6,
+          "porDefecto": true,
+          "fecha": null
+        }
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/capacity",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La capacidad diaria se actualizo correctamente.",
+        "data": {
+          "limiteHoras": 6,
+          "porDefecto": false,
+          "fecha": "2026-10-07"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/events",
+      "status": 201,
+      "body": {
+        "success": true,
+        "message": "El evento se creo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "nombre": "Test Event",
+          "tipo": "BODA",
+          "cliente": null,
+          "contactoCliente": null,
+          "fechaHora": "2026-10-20T12:00:00",
+          "lugar": null,
+          "plazoLimite": null,
+          "organizadorId": "<UUID>",
+          "subtareas": []
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El evento se consulto correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "nombre": "Test Event",
+          "tipo": "BODA",
+          "cliente": null,
+          "contactoCliente": null,
+          "fechaHora": "2026-10-20T12:00:00",
+          "lugar": null,
+          "plazoLimite": null,
+          "organizadorId": "<UUID>",
+          "subtareas": []
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/events/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El evento se actualizo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "nombre": "Updated Event",
+          "tipo": "BODA",
+          "cliente": null,
+          "contactoCliente": null,
+          "fechaHora": "2026-10-20T12:00:00",
+          "lugar": null,
+          "plazoLimite": null,
+          "organizadorId": "<UUID>",
+          "subtareas": []
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/events/<UUID>/subtasks",
+      "status": 201,
+      "body": {
+        "success": true,
+        "message": "La subtarea se creo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "eventId": "<UUID>",
+          "name": "Confirm catering",
+          "description": "Confirm vegetarian menu",
+          "targetDate": "2026-10-10",
+          "estimatedHours": 2,
+          "status": "PENDING",
+          "note": null
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events/<UUID>/subtasks",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Las subtareas se consultaron correctamente.",
+        "data": [
+          {
+            "id": "<UUID>",
+            "eventId": "<UUID>",
+            "name": "Confirm catering",
+            "description": "Confirm vegetarian menu",
+            "targetDate": "2026-10-10",
+            "estimatedHours": 2.0,
+            "status": "PENDING",
+            "note": null
+          }
+        ]
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/subtasks/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La subtarea se actualizo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "eventId": "<UUID>",
+          "name": "Confirm catering",
+          "description": "Updated description",
+          "targetDate": "2026-10-10",
+          "estimatedHours": 2.0,
+          "status": "PENDING",
+          "note": null
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/subtasks/<UUID>/conflicts/overload",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La verificacion de sobrecarga se realizo correctamente.",
+        "data": {
+          "conflict": true,
+          "plannedHours": 9,
+          "limitHours": 6.0,
+          "exceedsBy": 3.0
+        }
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/subtasks/<UUID>/status",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El estado de la subtarea se actualizo correctamente.",
+        "data": {
+          "id": "<UUID>",
+          "eventId": "<UUID>",
+          "name": "Confirm catering",
+          "description": "Updated description",
+          "targetDate": "2026-10-10",
+          "estimatedHours": 2.0,
+          "status": "DONE",
+          "note": null
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events/<UUID>/progress",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El progreso del evento se consulto correctamente.",
+        "data": {
+          "done": 1,
+          "total": 1,
+          "percentage": 100.0
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/today",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La vista Hoy se consulto correctamente.",
+        "data": {
+          "vencidas": [],
+          "paraHoy": [],
+          "proximas": [],
+          "regla": "Se muestran primero las Vencidas, luego las de Hoy y luego las Proximas. Dentro de cada grupo, ordenamos por fecha (la mas antigua o mas cercana primero) y, si hay empate, por menor esfuerzo (horas estimadas)."
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/subtasks/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "La subtarea se elimino correctamente.",
+        "data": null
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/events/<UUID>",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "El evento se elimino correctamente.",
+        "data": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/events/no-es-uuid",
+      "status": 400,
+      "body": {
+        "message": "Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: no-es-uuid",
+        "success": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 400,
+      "body": {
+        "message": "Escribe un correo valido.",
+        "success": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "status": 200,
+      "body": {
+        "success": true,
+        "message": "Cerraste sesion correctamente.",
+        "data": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 401,
+      "body": {
+        "success": false,
+        "message": "Tu sesion expiro o el token no es valido. Inicia sesion nuevamente."
+      }
+    }
+  ]
+}

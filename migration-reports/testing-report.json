@@ -1,0 +1,11 @@
+{
+  "module": "testing",
+  "status": "SUCCESS",
+  "timestamp": "2026-10-07T18:44:02.622161+00:00",
+  "summary": "verify passed: {'tests': 127, 'failures': 0, 'errors': 0, 'skipped': 0}; coverage {'BRANCH': 86.73, 'LINE': 98.62}; PostgreSQL 17.5 disposable tests; HTTP parity artifact",
+  "validator": {
+    "passed": 1,
+    "total": 1
+  },
+  "notes": []
+}

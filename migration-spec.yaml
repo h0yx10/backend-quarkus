@@ -1,0 +1,69 @@
+project:
+  name: events-api
+  source_path: /home/z3ro/Documentos/dev/miniproject/backend
+  target_path: /home/z3ro/Documentos/dev/miniproject/backend-quarkus
+source_technology:
+  spring_boot_version: "3.2.5"
+  java_version: "21"
+  build_tool: Maven
+target_technology:
+  quarkus_version: "3.40.1"
+  java_version: "21"
+  build_tool: Maven
+  runtime: JVM
+detected_features:
+  spring_web: true
+  spring_data_jpa: true
+  spring_security: true
+  spring_kafka: false
+  spring_rabbitmq: false
+  spring_jms: false
+  spring_scheduled: false
+  spring_cache: false
+  view_layer: false
+decisions:
+  strategy: full-quarkus
+  strategy_source: user
+  quarkus_version_source: user
+  java_version_source: user
+  persistence: hibernate-orm
+  persistence_source: user
+  rest_framework: quarkus-rest
+  rest_framework_source: user
+  security_approach: jwt
+  security_approach_source: user
+  domain: pure-java
+  schema_policy: validate
+  docker_database: external-supabase
+metadata:
+  complexity: high
+  generatedAt: "2026-10-07T18:03:44.286546+00:00"
+
+migration_strategy: full-quarkus
+entities:
+  - CapacidadDiaria
+  - Rol
+  - Organizador
+  - Usuario
+  - Evento
+  - Subtarea
+repositories:
+  - TokenRevocationPersistenceAdapter
+  - SubtareaPersistenceAdapter
+  - UsuarioPersistenceAdapter
+  - OrganizadorPersistenceAdapter
+  - RolPersistenceAdapter
+  - CapacidadDiariaPersistenceAdapter
+  - EventoPersistenceAdapter
+rest_controllers:
+  - OperationsController
+  - AdminController
+  - AuthController
+  - CapacidadController
+  - TodayController
+  - ConflictController
+  - EventSubtasksController
+  - SubtareaController
+  - EventoController
+unresolved_issues:
+  - Docker image build and container HTTP verification require Docker or Podman

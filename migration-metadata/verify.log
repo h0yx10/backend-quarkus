@@ -1,0 +1,92 @@
+2026-10-07 13:39:11,532 INFO  [io.quarkus.smallrye.jwt.deployment.SmallryeJwtDevModeProcessor] (build-4) The smallrye-jwt extension has configured an in-memory key pair, which is not enabled in production. Please ensure the correct keys/locations are set in production to avoid potential issues.
+2026-10-07 13:39:16,114 INFO  [io.quarkus.smallrye.jwt.deployment.SmallryeJwtDevModeProcessor] (build-12) The smallrye-jwt extension has configured an in-memory key pair, which is not enabled in production. Please ensure the correct keys/locations are set in production to avoid potential issues.
+2026-10-07 13:39:19,457 INFO  [io.quarkus.smallrye.jwt.deployment.SmallryeJwtDevModeProcessor] (build-12) The smallrye-jwt extension has configured an in-memory key pair, which is not enabled in production. Please ensure the correct keys/locations are set in production to avoid potential issues.
+2026-10-07 13:39:21,580 INFO  [com.tngtech.archunit.core.PluginLoader] (main) Detected Java version 21.0.12.1
+2026-10-07 13:39:25,391 INFO  [org.hibernate.orm.jpa] (main) HHH008540: Processing PersistenceUnitInfo [name: <default>]
+2026-10-07 13:39:25,536 INFO  [org.hibernate.orm.core] (main) HHH000001: Hibernate ORM core version 7.4.9.Final
+2026-10-07 13:39:25,736 INFO  [org.hibernate.orm.connections.pooling] (main) HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-07 13:39:25,980 INFO  [org.hibernate.validator.internal.util.Version] (main) HV000001: Hibernate Validator 9.1.3.Final
+2026-10-07 13:39:26,182 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: CreateEventoRequest#com.events.infrastructure.adapter.in.rest.dto.CreateEventoRequest(String, String, String, String, LocalDateTime, String, LocalDateTime, List)
+2026-10-07 13:39:26,187 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: CreateEventoRequest#subtareas()
+2026-10-07 13:39:26,188 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: subtareas
+2026-10-07 13:39:28,128 INFO  [io.quarkus] (main) events-api 1.0.0 on JVM (powered by Quarkus 3.40.1) started in 18.299s. Listening on: http://0.0.0.0:35051
+2026-10-07 13:39:28,128 INFO  [io.quarkus] (main) Profile test activated. 
+2026-10-07 13:39:28,128 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, compose, hibernate-orm, hibernate-validator, jacoco, jdbc-h2, jdbc-postgresql, narayana-jta, rest, rest-jackson, security, smallrye-context-propagation, smallrye-health, smallrye-jwt, smallrye-openapi, swagger-ui, vertx]
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-10-07 13:39:32,322 WARN  [io.smallrye.jwt.config] (vert.x-eventloop-thread-1) SRJWT03007: Public key is configured but either the secret key or key location are also configured and will be ignored
+2026-10-07 13:39:34,725 INFO  [io.quarkus] (main) events-api stopped in 0.032s
+2026-10-07 13:39:36,096 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: CreateEventoRequest#subtareas()
+2026-10-07 13:39:36,098 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: CreateEventoRequest#com.events.infrastructure.adapter.in.rest.dto.CreateEventoRequest(String, String, String, String, LocalDateTime, String, LocalDateTime, List)
+2026-10-07 13:39:36,098 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: subtareas
+2026-10-07 13:39:37,316 INFO  [io.quarkus] (main) events-api 1.0.0 on JVM (powered by Quarkus 3.40.1) started in 2.490s. Listening on: http://0.0.0.0:40923
+2026-10-07 13:39:37,316 INFO  [io.quarkus] (main) Profile test activated. 
+2026-10-07 13:39:37,316 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, compose, hibernate-orm, hibernate-validator, jacoco, jdbc-h2, jdbc-postgresql, narayana-jta, rest, rest-jackson, security, smallrye-context-propagation, smallrye-health, smallrye-jwt, smallrye-openapi, swagger-ui, vertx]
+2026-10-07 13:39:40,127 WARN  [io.smallrye.jwt.config] (vert.x-eventloop-thread-0) SRJWT03007: Public key is configured but either the secret key or key location are also configured and will be ignored
+2026-10-07 13:39:40,852 DEBUG [org.jboss.resteasy.reactive.server.handlers.ParameterHandler] (executor-thread-1) Error occurred during parameter extraction: com.events.infrastructure.adapter.in.rest.exception.InvalidUuidException: Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: no-es-uuid
+	at com.events.infrastructure.adapter.in.rest.exception.UuidParamConverter$1.fromString(UuidParamConverter.java:14)
+	at org.jboss.resteasy.reactive.server.core.parameters.converters.RuntimeResolvedConverter.convert(RuntimeResolvedConverter.java:24)
+	at org.jboss.resteasy.reactive.server.handlers.ParameterHandler.handleResult(ParameterHandler.java:108)
+	at org.jboss.resteasy.reactive.server.handlers.ParameterHandler.handle(ParameterHandler.java:59)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:191)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:150)
+	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:695)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
+	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
+	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: Invalid UUID string: no-es-uuid
+	at java.base/java.util.UUID.fromString1(UUID.java:282)
+	at java.base/java.util.UUID.fromString(UUID.java:260)
+	... 15 more
+
+2026-10-07 13:39:41,222 INFO  [io.quarkus] (main) events-api stopped in 0.025s
+2026-10-07 13:39:42,550 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: CreateEventoRequest#com.events.infrastructure.adapter.in.rest.dto.CreateEventoRequest(String, String, String, String, LocalDateTime, String, LocalDateTime, List)
+2026-10-07 13:39:42,552 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: subtareas
+2026-10-07 13:39:42,553 WARN  [org.hibernate.validator.internal.metadata.aggregated.CascadingMetaDataBuilder] (main) HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: CreateEventoRequest#subtareas()
+2026-10-07 13:39:43,719 INFO  [io.quarkus] (main) events-api 1.0.0 on JVM (powered by Quarkus 3.40.1) started in 2.256s. Listening on: http://0.0.0.0:38763
+2026-10-07 13:39:43,719 INFO  [io.quarkus] (main) Profile test activated. 
+2026-10-07 13:39:43,719 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, compose, hibernate-orm, hibernate-validator, jacoco, jdbc-h2, jdbc-postgresql, narayana-jta, rest, rest-jackson, security, smallrye-context-propagation, smallrye-health, smallrye-jwt, smallrye-openapi, swagger-ui, vertx]
+2026-10-07 13:39:44,251 WARN  [io.smallrye.jwt.config] (vert.x-eventloop-thread-0) SRJWT03007: Public key is configured but either the secret key or key location are also configured and will be ignored
+2026-10-07 13:39:46,591 WARN  [org.hibernate.orm.jdbc.error] (pool-20-thread-2) HHH000247: ErrorCode: 0, SQLState: 23505
+2026-10-07 13:39:46,591 WARN  [org.hibernate.orm.jdbc.error] (pool-20-thread-2) ERROR: duplicate key value violates unique constraint "usuarios_correo_key"
+  Detail: Key (correo)=(concurrente@correo.com) already exists.
+2026-10-07 13:39:47,408 DEBUG [org.jboss.resteasy.reactive.server.handlers.ParameterHandler] (executor-thread-1) Error occurred during parameter extraction: com.events.infrastructure.adapter.in.rest.exception.InvalidUuidException: Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; Invalid UUID string: no-es-uuid
+	at com.events.infrastructure.adapter.in.rest.exception.UuidParamConverter$1.fromString(UuidParamConverter.java:14)
+	at org.jboss.resteasy.reactive.server.core.parameters.converters.RuntimeResolvedConverter.convert(RuntimeResolvedConverter.java:24)
+	at org.jboss.resteasy.reactive.server.handlers.ParameterHandler.handleResult(ParameterHandler.java:108)
+	at org.jboss.resteasy.reactive.server.handlers.ParameterHandler.handle(ParameterHandler.java:59)
+	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:191)
+	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:150)
+	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$15.runWith(VertxCoreRecorder.java:695)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2651)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2630)
+	at org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1622)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:11)
+	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:11)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: Invalid UUID string: no-es-uuid
+	at java.base/java.util.UUID.fromString1(UUID.java:282)
+	at java.base/java.util.UUID.fromString(UUID.java:260)
+	... 15 more
+
+2026-10-07 13:39:49,073 WARN  [org.hibernate.orm.jdbc.error] (main) HHH000247: ErrorCode: 0, SQLState: 23514
+2026-10-07 13:39:49,074 WARN  [org.hibernate.orm.jdbc.error] (main) ERROR: new row for relation "organizadores" violates check constraint "test_fail_profile"
+  Detail: Failing row contains (fefae3b1-d9e7-4b8c-b4cb-8f0e9dacfdbc, 455b2383-6472-4920-b022-3fb72f6c0327, t).
+2026-10-07 13:39:52,405 INFO  [io.quarkus] (main) events-api stopped in 0.024s

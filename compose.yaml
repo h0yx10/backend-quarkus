@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    image: events-api-quarkus:local
+    ports:
+      - "${PORT:-8080}:${PORT:-8080}"
+    environment:
+      PORT: ${PORT:-8080}
+      DB_URL: ${DB_URL:?Configura DB_URL de Supabase}
+      DB_USERNAME: ${DB_USERNAME:?Configura DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD:?Configura DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?Configura JWT_SECRET}
+      JWT_EXPIRATION_MINUTES: ${JWT_EXPIRATION_MINUTES:-120}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:4200}
+    restart: unless-stopped

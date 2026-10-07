@@ -1,0 +1,11 @@
+{
+  "module": "build",
+  "status": "SUCCESS",
+  "timestamp": "2026-10-07T18:44:02.622161+00:00",
+  "summary": "BOM/plugin 3.40.1, compiler 3.15.0, Surefire/Failsafe 3.5.6; no Spring/Lombok dependencies",
+  "validator": {
+    "passed": 1,
+    "total": 1
+  },
+  "notes": []
+}

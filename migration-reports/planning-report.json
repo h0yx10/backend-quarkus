@@ -1,0 +1,11 @@
+{
+  "module": "planning",
+  "status": "SUCCESS",
+  "timestamp": "2026-10-07T18:44:02.622161+00:00",
+  "summary": "User-selected JVM, separate target, pure core, EntityManager, external Supabase and schema validation",
+  "validator": {
+    "passed": 1,
+    "total": 1
+  },
+  "notes": []
+}
