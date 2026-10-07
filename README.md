@@ -50,6 +50,9 @@ export JAVA_HOME=/ruta/al/jdk
 
 ## Configuracion
 
+La configuración vive en `src/main/resources/application.yml`, con perfiles `%dev` y
+`%test`. La extensión `quarkus-config-yaml` permite que Quarkus la cargue.
+
 Copia `.env.example` a `.env` y completa los valores de tu base de datos. `.env` esta en
 `.gitignore`: nunca subas credenciales reales al repositorio.
 

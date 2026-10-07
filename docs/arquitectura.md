@@ -42,7 +42,7 @@ Las dependencias siempre apuntan hacia adentro: `infrastructure → application 
 | `com.events.application.port.out` | Lo que los casos de uso necesitan del exterior: repositorios, `CurrentUsuarioPort`, `CurrentOrganizadorPort`, `TransactionPort`, `PasswordHasherPort`, `TokenProviderPort`. | domain |
 | `com.events.infrastructure.adapter.in.rest` | Adaptador de entrada HTTP: controllers, DTOs (request/response), mappers, `GlobalExceptionHandler`. | application.port.in, domain |
 | `com.events.infrastructure.adapter.out.persistence` | Adaptadores de salida JPA (`*PersistenceAdapter`) con `EntityManager`, entidades JPA propias y `PersistenceMapper`. | application.port.out, domain |
-| `com.events.infrastructure.security` | SmallRye JWT: permisos HTTP en `application.properties`, `JwtTokenProviderAdapter`, `BCryptPasswordHasherAdapter`, `SecurityContextCurrentUsuarioAdapter`, `SecurityContextCurrentOrganizadorAdapter`, `DatabaseJwtAuthenticationConverter`, `RestAuthenticationErrorHandler`. | application.port.out, domain |
+| `com.events.infrastructure.security` | SmallRye JWT: permisos HTTP en `application.yml`, `JwtTokenProviderAdapter`, `BCryptPasswordHasherAdapter`, `SecurityContextCurrentUsuarioAdapter`, `SecurityContextCurrentOrganizadorAdapter`, `DatabaseJwtAuthenticationConverter`, `RestAuthenticationErrorHandler`. | application.port.out, domain |
 | `com.events.infrastructure.config` | Wiring: `UseCaseConfig` crea los beans de casos de uso; `CorsConfig`; `OpenApiConfig`. | todo |
 
 ## Reglas verificadas por ArchUnit
@@ -131,7 +131,7 @@ usuarios 1───0..1 organizadores 1───* eventos 1───* subtareas
    `infrastructure/adapter/out/...` (o `infrastructure/security`).
 4. Bean en `UseCaseConfig`.
 5. Endpoint en un controller de `adapter/in/rest/controller` usando solo el puerto.
-6. Si la ruta debe ser publica o restringida por rol, ajustala en los permisos HTTP de `application.properties`.
+6. Si la ruta debe ser publica o restringida por rol, ajustala en los permisos HTTP de `application.yml`.
 7. Test unitario del caso de uso con mocks de los puertos.
 
 ## Configuracion de seguridad
