@@ -1,0 +1,113 @@
+# Quarkus JVM: configuration and profile overrides.
+quarkus:
+  application:
+    name: "events-api"
+  http:
+    port: "${PORT:8080}"
+    host: "0.0.0.0"
+    cors:
+      enabled: true
+      origins: "${CORS_ORIGIN:http://localhost:4200,https://frontend-pi-olive-30.vercel.app}"
+      methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+      headers: "*"
+      access-control-allow-credentials: true
+    auth:
+      permission:
+        public:
+          paths: "/api/auth/register,/api/auth/login,/api-docs,/swagger-ui*,/q/health*,/actuator/*"
+          policy: "permit"
+        api:
+          paths: "/api/*"
+          policy: "authenticated"
+        admin:
+          paths: "/api/admin/*"
+          policy: "admin"
+        organizador:
+          paths: "/api/events*,/api/subtasks*,/api/capacity*,/api/today*"
+          policy: "organizador"
+      policy:
+        admin:
+          roles-allowed: "ADMIN"
+        organizador:
+          roles-allowed: "ORGANIZADOR"
+    test-port: 0
+  datasource:
+    db-kind: "postgresql"
+    jdbc:
+      url: "${DB_URL:jdbc:postgresql://aws-0-us-west-2.pooler.supabase.com:5432/postgres?sslmode=require}"
+      max-size: 5
+      min-size: 1
+      acquisition-timeout: "20S"
+      idle-removal-interval: "30S"
+      max-lifetime: "25M"
+    username: "${DB_USERNAME}"
+    password: "${DB_PASSWORD}"
+    devservices:
+      enabled: false
+  hibernate-orm:
+    schema-management:
+      strategy: "validate"
+    sql-load-script: "no-file"
+    jdbc:
+      timezone: "America/Bogota"
+  smallrye-openapi:
+    path: "/api-docs"
+    security-scheme: "jwt"
+    security-scheme-name: "bearerAuth"
+  swagger-ui:
+    always-include: true
+    path: "/swagger-ui"
+  package:
+    jar:
+      type: "fast-jar"
+"%dev":
+  quarkus:
+    hibernate-orm:
+      log:
+        sql: true
+    log:
+      category:
+        "com.events":
+          level: "DEBUG"
+app:
+  security:
+    jwt:
+      secret: "${JWT_SECRET}"
+      issuer: "events-api"
+      expiration-minutes: "${JWT_EXPIRATION_MINUTES:120}"
+mp:
+  jwt:
+    verify:
+      issuer: "events-api"
+      clock:
+        skew: 60
+smallrye:
+  jwt:
+    verify:
+      algorithm: "HS256"
+      secretkey: "${JWT_SECRET}"
+    required:
+      claims: "sub,iat,exp"
+"%test":
+  quarkus:
+    datasource:
+      db-kind: "h2"
+      jdbc:
+        url: "jdbc:h2:mem:events;DB_CLOSE_DELAY=-1;MODE=PostgreSQL"
+      username: "sa"
+      password: ""
+    hibernate-orm:
+      schema-management:
+        strategy: "drop-and-create"
+      sql-load-script: "import-test.sql"
+  app:
+    security:
+      jwt:
+        secret: "test-secret-test-secret-test-secret-123"
+  smallrye:
+    jwt:
+      verify:
+        secretkey: "test-secret-test-secret-test-secret-123"
+
+
+        
