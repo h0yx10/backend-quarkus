@@ -64,6 +64,9 @@ Todos los campos de la respuesta son en inglés. Sin descripción,
 `La descripcion puede tener maximo 255 caracteres.`.
 
 **Response 400** si falla alguna validacion. **Response 404** si el evento no existe.
+**Response 409** si las horas planificadas del dia, incluyendo la nueva subtarea, superan
+el limite diario. El cuerpo agrega `plannedHours`, `limitHours` y `exceedsBy` al contrato
+estandar de conflicto descrito en [README.md](./README.md#sobre-de-respuesta-estandar).
 
 ---
 
