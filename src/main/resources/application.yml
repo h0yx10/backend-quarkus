@@ -16,7 +16,7 @@ quarkus:
       access-control-allow-credentials: true
     auth:
       permission:
-        public:git revert HEAD
+        public:
           paths: "/api/auth/register,/api/auth/login,/api-docs,/swagger-ui*,/q/health*,/actuator/*"
           policy: "permit"
         api:
