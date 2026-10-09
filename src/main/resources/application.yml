@@ -16,7 +16,7 @@ quarkus:
       access-control-allow-credentials: true
     auth:
       permission:
-        public:
+        public:git revert HEAD
           paths: "/api/auth/register,/api/auth/login,/api-docs,/swagger-ui*,/q/health*,/actuator/*"
           policy: "permit"
         api:
@@ -43,8 +43,8 @@ quarkus:
       acquisition-timeout: "20S"
       idle-removal-interval: "30S"
       max-lifetime: "25M"
-    username: "${DB_USERNAME:postgres}"
-    password: "${DB_PASSWORD:admin}"
+    username: "${DB_USERNAME}"
+    password: "${DB_PASSWORD}"
     devservices:
       enabled: false
   hibernate-orm:
@@ -75,7 +75,7 @@ quarkus:
 app:
   security:
     jwt:
-      secret: "${JWT_SECRET:una-clave-local-muy-larga-y-segura-1234567890}"
+      secret: "${JWT_SECRET}"
       issuer: "events-api"
       expiration-minutes: "${JWT_EXPIRATION_MINUTES:120}"
 mp:
@@ -88,7 +88,7 @@ smallrye:
   jwt:
     verify:
       algorithm: "HS256"
-      secretkey: "${JWT_SECRET:una-clave-local-muy-larga-y-segura-1234567890}"
+      secretkey: "${JWT_SECRET}"
     required:
       claims: "sub,iat,exp"
 "%test":
