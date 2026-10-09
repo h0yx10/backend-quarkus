@@ -118,7 +118,7 @@ Con la aplicacion en ejecucion:
 
 Todas las respuestas exitosas usan el formato `{ success, message, data, timestamp }`. Los
 errores usan `{ success: false, message, timestamp }` (409 de conflicto de capacidad agrega
-ademas `plannedHours`, `limitHours`, `exceedsBy`).
+ademas `code: "overload_conflict"`, `plannedHours`, `limitHours`, `exceedsBy`).
 
 Todas las rutas `/api/**` exigen `Authorization: Bearer <token>`, excepto registro y login.
 Los permisos se consultan en BD en cada petición. Las rutas de negocio exigen ORGANIZADOR

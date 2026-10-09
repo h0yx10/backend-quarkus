@@ -38,10 +38,11 @@ Errores segun el caso:
 | `409 Conflict` | correo ya registrado, baja con dependencias, último ADMIN habilitado, o la reprogramacion de una subtarea supera el limite diario de horas (ver contrato especial abajo) |
 | `500 Internal Server Error` | error inesperado |
 
-Contrato especial del **409** (sobrecarga de capacidad), agrega tres campos al error estandar:
+Contrato especial del **409** (sobrecarga de capacidad), agrega cuatro campos al error estandar:
 
 | Campo | Tipo | Descripcion |
 |---|---|---|
+| `code` | string | siempre `"overload_conflict"`; identifica el conflicto sin depender del texto de `message` |
 | `plannedHours` | number (decimal) | horas totales planeadas para ese dia si se confirma el cambio |
 | `limitHours` | number (decimal) | limite diario configurado |
 | `exceedsBy` | number (decimal) | horas que exceden el limite |

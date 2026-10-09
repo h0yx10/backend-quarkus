@@ -21,6 +21,7 @@ export interface ApiError {
 
 // 409 por sobrecarga de capacidad (PATCH /api/subtasks/{id})
 export interface CapacityConflictError extends ApiError {
+  code: 'overload_conflict';
   plannedHours: number;
   limitHours: number;
   exceedsBy: number;
