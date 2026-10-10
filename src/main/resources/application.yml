@@ -5,6 +5,12 @@ quarkus:
   http:
     port: "${PORT:8080}"
     host: "0.0.0.0"
+    # Render termina TLS en su proxy: confiar en X-Forwarded-* para que el scheme/host sean los reales
+    proxy:
+      proxy-address-forwarding: true
+      allow-x-forwarded: true
+      enable-forwarded-host: true
+      enable-forwarded-prefix: true
     cors:
       enabled: true
       origins: "${CORS_ORIGIN:http://localhost:4200,https://frontend-pi-olive-30.vercel.app}"
