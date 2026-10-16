@@ -1,5 +1,6 @@
 package com.events.domain.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,17 @@ public class Evento {
     public void agregarSubtarea(Subtarea subtarea) {
         subtareas.add(subtarea);
         subtarea.asociarEvento(this);
+    }
+
+    /**
+     * Una subtarea de preparacion no puede quedar programada despues del dia del evento.
+     * Las fechas pasadas si se permiten: la vista "Hoy" las muestra como vencidas.
+     */
+    public void validarFechaSubtarea(LocalDate fechaObjetivo) {
+        if (fechaHora != null && fechaObjetivo != null && fechaObjetivo.isAfter(fechaHora.toLocalDate())) {
+            throw new IllegalArgumentException("La fecha objetivo no puede ser posterior a la fecha del evento ("
+                    + fechaHora.toLocalDate() + ").");
+        }
     }
 
     public void actualizar(String nombre, String tipo, String cliente, String contactoCliente,

@@ -72,10 +72,20 @@ quarkus:
       category:
         "com.events":
           level: "DEBUG"
+  # Solo en desarrollo local hay clave por defecto; en produccion JWT_SECRET es obligatoria
+  # y su ausencia detiene el arranque en vez de firmar tokens con una clave publica.
+  app:
+    security:
+      jwt:
+        secret: '${JWT_SECRET:dev-only-secret-change-me-please-32bytes-min!!}'
+  smallrye:
+    jwt:
+      verify:
+        secretkey: '${JWT_SECRET:dev-only-secret-change-me-please-32bytes-min!!}'
 app:
   security:
     jwt:
-      secret: '${JWT_SECRET:dev-only-secret-change-me-please-32bytes-min!!}'
+      secret: "${JWT_SECRET}"
       issuer: "events-api"
       expiration-minutes: "${JWT_EXPIRATION_MINUTES:120}"
 mp:
@@ -88,7 +98,7 @@ smallrye:
   jwt:
     verify:
       algorithm: "HS256"
-      secretkey: '${JWT_SECRET:dev-only-secret-change-me-please-32bytes-min!!}'
+      secretkey: "${JWT_SECRET}"
     required:
       claims: "sub,iat,exp"
 "%test":

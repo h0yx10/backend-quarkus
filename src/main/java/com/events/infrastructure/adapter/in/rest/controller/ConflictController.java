@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.Response;
 import io.smallrye.common.annotation.Blocking;
 
 
+import static com.events.infrastructure.utils.constants.MessageConstants.INVALID_REQUEST;
 import static com.events.infrastructure.utils.constants.MessageConstants.OVERLOAD_CHECK_RETRIEVED;
 
 import com.events.application.port.in.CheckOverloadConflictPort;
@@ -15,6 +16,8 @@ import com.events.infrastructure.adapter.in.rest.dto.OverloadCheckRequest;
 import com.events.infrastructure.adapter.in.rest.dto.OverloadCheckResponse;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -37,7 +40,8 @@ public class ConflictController {
             summary = "Previsualizar sobrecarga",
             description = "Calcula si reprogramar la subtarea a la fecha/horas indicadas superaria el limite diario, sin guardar el cambio."
     )
-    public ApiResponse<OverloadCheckResponse> check(@PathParam("id") UUID id, OverloadCheckRequest request) {
+    public ApiResponse<OverloadCheckResponse> check(@PathParam("id") UUID id,
+                                                    @Valid @NotNull(message = INVALID_REQUEST) OverloadCheckRequest request) {
         var result = checkOverloadConflictUseCase.execute(id, request.targetDate(), request.estimatedHours());
         return ApiResponse.ok(OVERLOAD_CHECK_RETRIEVED,
                 new OverloadCheckResponse(result.conflict(), result.plannedHours(), result.limitHours(), result.exceedsBy()));

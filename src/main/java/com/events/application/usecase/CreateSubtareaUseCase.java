@@ -5,10 +5,8 @@ import com.events.application.port.out.CurrentOrganizadorPort;
 import com.events.application.port.out.CapacidadDiariaRepositoryPort;
 import com.events.application.port.out.EventoRepositoryPort;
 import com.events.application.port.out.SubtareaRepositoryPort;
-import com.events.domain.entity.CapacidadDiaria;
 import com.events.domain.entity.Evento;
 import com.events.domain.entity.Subtarea;
-import com.events.domain.exception.CapacityConflictException;
 import com.events.domain.exception.EventoNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,7 +16,7 @@ public class CreateSubtareaUseCase implements CreateSubtareaPort {
 
     private final EventoRepositoryPort eventoRepository;
     private final SubtareaRepositoryPort subtareaRepository;
-    private final CapacidadDiariaRepositoryPort capacidadDiariaRepository;
+    private final CapacidadDiariaValidator capacidadDiaria;
     private final CurrentOrganizadorPort currentOrganizador;
 
     public CreateSubtareaUseCase(EventoRepositoryPort eventoRepository, SubtareaRepositoryPort subtareaRepository,
@@ -26,7 +24,7 @@ public class CreateSubtareaUseCase implements CreateSubtareaPort {
                                  CurrentOrganizadorPort currentOrganizador) {
         this.eventoRepository = eventoRepository;
         this.subtareaRepository = subtareaRepository;
-        this.capacidadDiariaRepository = capacidadDiariaRepository;
+        this.capacidadDiaria = new CapacidadDiariaValidator(capacidadDiariaRepository, subtareaRepository);
         this.currentOrganizador = currentOrganizador;
     }
 
@@ -34,15 +32,8 @@ public class CreateSubtareaUseCase implements CreateSubtareaPort {
     public Subtarea execute(UUID eventoId, String nombre, String descripcion, LocalDate fechaObjetivo, BigDecimal horasEstimadas) {
         Evento evento = eventoRepository.findByIdAndOrganizadorId(eventoId, currentOrganizador.currentOrganizadorId())
                 .orElseThrow(() -> new EventoNotFoundException("No encontramos el evento solicitado."));
-        UUID organizadorId = evento.getOrganizador().getId();
-        BigDecimal limite = capacidadDiariaRepository.findCurrentByOrganizadorId(organizadorId)
-                .map(CapacidadDiaria::getLimiteHoras)
-                .orElse(CapacidadDiaria.LIMITE_POR_DEFECTO);
-        BigDecimal otrasHoras = subtareaRepository.sumHorasPlanificadas(organizadorId, fechaObjetivo, null);
-        BigDecimal totalPlanificado = otrasHoras.add(horasEstimadas);
-        if (totalPlanificado.compareTo(limite) > 0) {
-            throw new CapacityConflictException(totalPlanificado, limite);
-        }
+        evento.validarFechaSubtarea(fechaObjetivo);
+        capacidadDiaria.validar(evento.getOrganizador().getId(), fechaObjetivo, horasEstimadas, null);
 
         Subtarea subtarea = new Subtarea(nombre, descripcion, fechaObjetivo, horasEstimadas);
         subtarea.asociarEvento(evento);

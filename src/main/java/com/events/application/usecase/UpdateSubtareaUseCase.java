@@ -4,9 +4,8 @@ import com.events.application.port.in.UpdateSubtareaPort;
 import com.events.application.port.out.CurrentOrganizadorPort;
 import com.events.application.port.out.CapacidadDiariaRepositoryPort;
 import com.events.application.port.out.SubtareaRepositoryPort;
-import com.events.domain.entity.CapacidadDiaria;
+import com.events.domain.entity.EstadoSubtarea;
 import com.events.domain.entity.Subtarea;
-import com.events.domain.exception.CapacityConflictException;
 import com.events.domain.exception.SubtareaNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,14 +14,14 @@ import java.util.UUID;
 public class UpdateSubtareaUseCase implements UpdateSubtareaPort {
 
     private final SubtareaRepositoryPort subtareaRepository;
-    private final CapacidadDiariaRepositoryPort capacidadDiariaRepository;
+    private final CapacidadDiariaValidator capacidadDiaria;
     private final CurrentOrganizadorPort currentOrganizador;
 
     public UpdateSubtareaUseCase(SubtareaRepositoryPort subtareaRepository,
                                   CapacidadDiariaRepositoryPort capacidadDiariaRepository,
                                   CurrentOrganizadorPort currentOrganizador) {
         this.subtareaRepository = subtareaRepository;
-        this.capacidadDiariaRepository = capacidadDiariaRepository;
+        this.capacidadDiaria = new CapacidadDiariaValidator(capacidadDiariaRepository, subtareaRepository);
         this.currentOrganizador = currentOrganizador;
     }
 
@@ -31,21 +30,14 @@ public class UpdateSubtareaUseCase implements UpdateSubtareaPort {
         Subtarea subtarea = subtareaRepository.findByIdAndOrganizadorId(subtareaId, currentOrganizador.currentOrganizadorId())
                 .orElseThrow(() -> new SubtareaNotFoundException("No encontramos la subtarea solicitada."));
 
+        subtarea.getEvento().validarFechaSubtarea(fechaObjetivo);
+
+        // Una subtarea DONE no suma a la carga diaria, asi que moverla no puede sobrecargar el dia.
         boolean cambiaCarga = fechaObjetivo != null || horasEstimadas != null;
-        if (cambiaCarga) {
+        if (cambiaCarga && subtarea.getEstado() != EstadoSubtarea.DONE) {
             LocalDate fechaEfectiva = fechaObjetivo != null ? fechaObjetivo : subtarea.getFechaObjetivo();
             BigDecimal horasEfectivas = horasEstimadas != null ? horasEstimadas : subtarea.getHorasEstimadas();
-            UUID organizadorId = subtarea.getEvento().getOrganizador().getId();
-
-            BigDecimal limite = capacidadDiariaRepository.findCurrentByOrganizadorId(organizadorId)
-                    .map(CapacidadDiaria::getLimiteHoras)
-                    .orElse(CapacidadDiaria.LIMITE_POR_DEFECTO);
-            BigDecimal otrasHoras = subtareaRepository.sumHorasPlanificadas(organizadorId, fechaEfectiva, subtarea.getId());
-            BigDecimal totalPlanificado = otrasHoras.add(horasEfectivas);
-
-            if (totalPlanificado.compareTo(limite) > 0) {
-                throw new CapacityConflictException(totalPlanificado, limite);
-            }
+            capacidadDiaria.validar(subtarea.getEvento().getOrganizador().getId(), fechaEfectiva, horasEfectivas, subtarea.getId());
         }
 
         subtarea.actualizar(nombre, descripcion, fechaObjetivo, horasEstimadas);

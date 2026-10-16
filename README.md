@@ -168,7 +168,9 @@ o al previsualizar con `POST /api/subtasks/{id}/conflicts/overload`), se suman l
 `DONE` planificadas para ese organizador en la fecha destino (excluyendo la propia subtarea) y
 se compara contra el limite diario (US-12, 6h por defecto). Si se supera, `PATCH` responde
 `409` sin guardar el cambio; el cliente resuelve reintentando con otra fecha (mover) o con
-menos horas (reducir), que es la misma operacion sin conflicto.
+menos horas (reducir), que es la misma operacion sin conflicto. La misma regla aplica al crear
+subtareas (sueltas o iniciales de un evento) y al sacar una subtarea de `DONE`, porque vuelve a
+sumar horas. Una subtarea nunca puede quedar programada despues del dia del evento (`400`).
 
 ## Pruebas y cobertura
 

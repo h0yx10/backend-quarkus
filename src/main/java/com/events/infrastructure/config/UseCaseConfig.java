@@ -171,8 +171,9 @@ public class UseCaseConfig {
     @Produces
     @ApplicationScoped
     public ChangeSubtareaStatusPort changeSubtareaStatusPort(SubtareaRepositoryPort subtareaRepository,
+                                                              CapacidadDiariaRepositoryPort capacidadDiariaRepository,
                                                               CurrentOrganizadorPort currentOrganizador) {
-        return new ChangeSubtareaStatusUseCase(subtareaRepository, currentOrganizador);
+        return new ChangeSubtareaStatusUseCase(subtareaRepository, capacidadDiariaRepository, currentOrganizador);
     }
 
     @Produces

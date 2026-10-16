@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.events.application.port.in.NuevaSubtareaData;
@@ -14,6 +16,7 @@ import com.events.application.port.out.OrganizadorRepositoryPort;
 import com.events.application.port.out.SubtareaRepositoryPort;
 import com.events.domain.entity.Organizador;
 import com.events.domain.entity.Usuario;
+import com.events.domain.exception.CapacityConflictException;
 import com.events.domain.exception.OrganizadorNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -49,6 +52,38 @@ class CreateEventoUseCaseTest {
         assertThat(evento.getSubtareas()).hasSize(1);
         assertThat(evento.getSubtareas().get(0).getDescripcion()).isEqualTo("Confirmar aforo");
         assertThat(evento.getSubtareas().get(0).getNombre()).isEqualTo("Reservar salon");
+    }
+
+    @Test
+    void rechazaSubtareasInicialesPosterioresAlEvento() {
+        UUID organizadorId = UUID.randomUUID();
+        when(currentOrganizador.currentOrganizadorId()).thenReturn(organizadorId);
+        when(organizadorRepository.findById(organizadorId)).thenReturn(Optional.of(new Organizador(new Usuario("Demo", "demo@x.com", "hash"))));
+
+        LocalDateTime fechaEvento = LocalDateTime.now().plusDays(10);
+        var subtareas = List.of(new NuevaSubtareaData("Reservar salon", null, fechaEvento.toLocalDate().plusDays(1), BigDecimal.ONE));
+
+        assertThatThrownBy(() -> useCase.execute("Boda", "Social", null, null, fechaEvento, null, null, subtareas))
+                .isInstanceOf(IllegalArgumentException.class);
+        verify(eventoRepository, never()).save(any());
+    }
+
+    @Test
+    void rechazaSubtareasInicialesQueJuntasSuperanElLimiteDelDia() {
+        UUID organizadorId = UUID.randomUUID();
+        when(currentOrganizador.currentOrganizadorId()).thenReturn(organizadorId);
+        when(organizadorRepository.findById(organizadorId)).thenReturn(Optional.of(new Organizador(new Usuario("Demo", "demo@x.com", "hash"))));
+        when(capacidadDiariaRepository.findCurrentByOrganizadorId(any())).thenReturn(Optional.empty());
+        when(subtareaRepository.sumHorasPlanificadas(any(), any(), any())).thenReturn(BigDecimal.ZERO);
+
+        LocalDate dia = LocalDate.now().plusDays(1);
+        var subtareas = List.of(
+                new NuevaSubtareaData("Salon", null, dia, BigDecimal.valueOf(4)),
+                new NuevaSubtareaData("Catering", null, dia, BigDecimal.valueOf(3)));
+
+        assertThatThrownBy(() -> useCase.execute("Boda", "Social", null, null, LocalDateTime.now().plusDays(10), null, null, subtareas))
+                .isInstanceOf(CapacityConflictException.class);
+        verify(eventoRepository, never()).save(any());
     }
 
     @Test

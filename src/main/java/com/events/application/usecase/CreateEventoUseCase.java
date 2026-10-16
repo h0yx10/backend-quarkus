@@ -7,25 +7,22 @@ import com.events.application.port.out.CurrentOrganizadorPort;
 import com.events.application.port.out.EventoRepositoryPort;
 import com.events.application.port.out.OrganizadorRepositoryPort;
 import com.events.application.port.out.SubtareaRepositoryPort;
-import com.events.domain.entity.CapacidadDiaria;
 import com.events.domain.entity.Evento;
 import com.events.domain.entity.Organizador;
 import com.events.domain.entity.Subtarea;
-import com.events.domain.exception.CapacityConflictException;
-import java.math.BigDecimal;
 import com.events.domain.exception.OrganizadorNotFoundException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class CreateEventoUseCase implements CreateEventoPort {
 
     private final EventoRepositoryPort eventoRepository;
     private final OrganizadorRepositoryPort organizadorRepository;
-    private final CapacidadDiariaRepositoryPort capacidadDiariaRepository;
-    private final SubtareaRepositoryPort subtareaRepository;
+    private final CapacidadDiariaValidator capacidadDiaria;
     private final CurrentOrganizadorPort currentOrganizador;
 
     public CreateEventoUseCase(EventoRepositoryPort eventoRepository,
@@ -35,8 +32,7 @@ public class CreateEventoUseCase implements CreateEventoPort {
                                 CurrentOrganizadorPort currentOrganizador) {
         this.eventoRepository = eventoRepository;
         this.organizadorRepository = organizadorRepository;
-        this.capacidadDiariaRepository = capacidadDiariaRepository;
-        this.subtareaRepository = subtareaRepository;
+        this.capacidadDiaria = new CapacidadDiariaValidator(capacidadDiariaRepository, subtareaRepository);
         this.currentOrganizador = currentOrganizador;
     }
 
@@ -47,38 +43,20 @@ public class CreateEventoUseCase implements CreateEventoPort {
         Organizador organizador = organizadorRepository.findById(currentOrganizador.currentOrganizadorId())
                 .orElseThrow(() -> new OrganizadorNotFoundException("No encontramos el usuario autenticado."));
 
-        validarCapacidad(organizador, subtareasIniciales);
         Evento evento = new Evento(nombre, tipo, cliente, contactoCliente, fechaHora, lugar, plazoLimite, organizador);
+        List<NuevaSubtareaData> subtareas = subtareasIniciales == null ? List.of() : subtareasIniciales;
 
-        if (subtareasIniciales != null) {
-            for (NuevaSubtareaData data : subtareasIniciales) {
-                evento.agregarSubtarea(new Subtarea(data.nombre(), data.descripcion(), data.fechaObjetivo(), data.horasEstimadas()));
-            }
+        Map<LocalDate, BigDecimal> nuevasHorasPorFecha = new HashMap<>();
+        for (NuevaSubtareaData data : subtareas) {
+            evento.validarFechaSubtarea(data.fechaObjetivo());
+            nuevasHorasPorFecha.merge(data.fechaObjetivo(), data.horasEstimadas(), BigDecimal::add);
+        }
+        capacidadDiaria.validar(organizador.getId(), nuevasHorasPorFecha, null);
+
+        for (NuevaSubtareaData data : subtareas) {
+            evento.agregarSubtarea(new Subtarea(data.nombre(), data.descripcion(), data.fechaObjetivo(), data.horasEstimadas()));
         }
 
         return eventoRepository.save(evento);
     }
-
-    private void validarCapacidad(Organizador organizador, List<NuevaSubtareaData> subtareasIniciales) {
-        if (subtareasIniciales == null || subtareasIniciales.isEmpty()) {
-            return;
-        }
-
-        UUID organizadorId = organizador.getId();
-        BigDecimal limite = capacidadDiariaRepository.findCurrentByOrganizadorId(organizadorId)
-                .map(CapacidadDiaria::getLimiteHoras)
-                .orElse(CapacidadDiaria.LIMITE_POR_DEFECTO);
-        Map<java.time.LocalDate, BigDecimal> nuevasHorasPorFecha = new HashMap<>();
-        for (NuevaSubtareaData data : subtareasIniciales) {
-            nuevasHorasPorFecha.merge(data.fechaObjetivo(), data.horasEstimadas(), BigDecimal::add);
-        }
-        for (Map.Entry<java.time.LocalDate, BigDecimal> entry : nuevasHorasPorFecha.entrySet()) {
-            BigDecimal totalPlanificado = subtareaRepository.sumHorasPlanificadas(organizadorId, entry.getKey(), null)
-                    .add(entry.getValue());
-            if (totalPlanificado.compareTo(limite) > 0) {
-                throw new CapacityConflictException(totalPlanificado, limite);
-            }
-        }
-    }
-
 }

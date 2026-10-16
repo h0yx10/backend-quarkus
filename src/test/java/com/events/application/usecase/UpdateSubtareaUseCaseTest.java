@@ -19,6 +19,7 @@ import com.events.domain.entity.Subtarea;
 import com.events.domain.exception.CapacityConflictException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -94,6 +95,37 @@ class UpdateSubtareaUseCaseTest {
         useCase.execute(null, null, LocalDate.now().plusDays(1), BigDecimal.valueOf(2));
 
         verify(subtareaRepository).save(subtarea);
+    }
+
+    @Test
+    void rechazaReprogramarDespuesDelEventoSinGuardar() {
+        Organizador organizador = new Organizador(new Usuario("Demo", "demo@x.com", "hash"));
+        LocalDateTime fechaEvento = LocalDateTime.now().plusDays(10);
+        Evento evento = new Evento("Evento", "Social", null, null, fechaEvento, null, null, organizador);
+        Subtarea subtarea = new Subtarea("Buscar proveedor", LocalDate.now().plusDays(1), BigDecimal.ONE);
+        subtarea.asociarEvento(evento);
+        when(subtareaRepository.findByIdAndOrganizadorId(any(), any())).thenReturn(Optional.of(subtarea));
+
+        LocalDate despuesDelEvento = fechaEvento.toLocalDate().plusDays(1);
+        assertThatThrownBy(() -> useCase.execute(null, null, despuesDelEvento, null))
+                .isInstanceOf(IllegalArgumentException.class);
+
+        verify(subtareaRepository, never()).save(any());
+        assertThat(subtarea.getFechaObjetivo()).isEqualTo(LocalDate.now().plusDays(1));
+    }
+
+    @Test
+    void reprogramarUnaSubtareaHechaNoValidaCargaPorqueNoSumaHoras() {
+        Subtarea subtarea = subtareaConEvento();
+        subtarea.marcarHecha();
+        when(subtareaRepository.findByIdAndOrganizadorId(any(), any())).thenReturn(Optional.of(subtarea));
+        when(subtareaRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        LocalDate nuevaFecha = LocalDate.now().plusDays(3);
+        useCase.execute(null, null, nuevaFecha, null);
+
+        assertThat(subtarea.getFechaObjetivo()).isEqualTo(nuevaFecha);
+        verify(subtareaRepository, never()).sumHorasPlanificadas(any(), any(), any());
     }
 
     @Test
