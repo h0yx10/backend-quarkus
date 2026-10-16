@@ -8,8 +8,10 @@ import static org.mockito.Mockito.when;
 
 import com.events.application.port.in.NuevaSubtareaData;
 import com.events.application.port.out.CurrentOrganizadorPort;
+import com.events.application.port.out.CapacidadDiariaRepositoryPort;
 import com.events.application.port.out.EventoRepositoryPort;
 import com.events.application.port.out.OrganizadorRepositoryPort;
+import com.events.application.port.out.SubtareaRepositoryPort;
 import com.events.domain.entity.Organizador;
 import com.events.domain.entity.Usuario;
 import com.events.domain.exception.OrganizadorNotFoundException;
@@ -25,14 +27,19 @@ class CreateEventoUseCaseTest {
 
     private final EventoRepositoryPort eventoRepository = mock(EventoRepositoryPort.class);
     private final OrganizadorRepositoryPort organizadorRepository = mock(OrganizadorRepositoryPort.class);
+    private final CapacidadDiariaRepositoryPort capacidadDiariaRepository = mock(CapacidadDiariaRepositoryPort.class);
+    private final SubtareaRepositoryPort subtareaRepository = mock(SubtareaRepositoryPort.class);
     private final CurrentOrganizadorPort currentOrganizador = mock(CurrentOrganizadorPort.class);
-    private final CreateEventoUseCase useCase = new CreateEventoUseCase(eventoRepository, organizadorRepository, currentOrganizador);
+    private final CreateEventoUseCase useCase = new CreateEventoUseCase(eventoRepository, organizadorRepository,
+            capacidadDiariaRepository, subtareaRepository, currentOrganizador);
 
     @Test
     void creaElEventoConSusSubtareasIniciales() {
         UUID organizadorId = UUID.randomUUID();
         when(currentOrganizador.currentOrganizadorId()).thenReturn(organizadorId);
         when(organizadorRepository.findById(organizadorId)).thenReturn(Optional.of(new Organizador(new Usuario("Demo", "demo@x.com", "hash"))));
+        when(capacidadDiariaRepository.findCurrentByOrganizadorId(any())).thenReturn(Optional.empty());
+        when(subtareaRepository.sumHorasPlanificadas(any(), any(), any())).thenReturn(BigDecimal.ZERO);
         when(eventoRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         var subtareas = List.of(new NuevaSubtareaData("Reservar salon", "Confirmar aforo", LocalDate.now().plusDays(1), BigDecimal.valueOf(2)));

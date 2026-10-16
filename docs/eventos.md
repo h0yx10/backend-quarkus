@@ -61,6 +61,9 @@ Gestion de eventos y su plan de trabajo logistico (US-01, US-03).
 **Response 201** - `data`: `EventoResponse`.
 
 **Response 400** si falla alguna validacion.
+**Response 409** si las subtareas iniciales superan el limite diario de horas. El cuerpo agrega
+`plannedHours`, `limitHours` y `exceedsBy` al contrato de conflicto descrito en
+[README.md](./README.md#sobre-de-respuesta-estandar).
 
 ---
 

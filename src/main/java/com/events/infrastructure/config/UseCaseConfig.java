@@ -108,8 +108,11 @@ public class UseCaseConfig {
     @ApplicationScoped
     public CreateEventoPort createEventoPort(EventoRepositoryPort eventoRepository,
                                               OrganizadorRepositoryPort organizadorRepository,
+                                              CapacidadDiariaRepositoryPort capacidadDiariaRepository,
+                                              SubtareaRepositoryPort subtareaRepository,
                                               CurrentOrganizadorPort currentOrganizador) {
-        return new CreateEventoUseCase(eventoRepository, organizadorRepository, currentOrganizador);
+        return new CreateEventoUseCase(eventoRepository, organizadorRepository, capacidadDiariaRepository,
+                subtareaRepository, currentOrganizador);
     }
 
     @Produces
@@ -144,8 +147,9 @@ public class UseCaseConfig {
     @ApplicationScoped
     public CreateSubtareaPort createSubtareaPort(EventoRepositoryPort eventoRepository,
                                                   SubtareaRepositoryPort subtareaRepository,
+                                                  CapacidadDiariaRepositoryPort capacidadDiariaRepository,
                                                   CurrentOrganizadorPort currentOrganizador) {
-        return new CreateSubtareaUseCase(eventoRepository, subtareaRepository, currentOrganizador);
+        return new CreateSubtareaUseCase(eventoRepository, subtareaRepository, capacidadDiariaRepository, currentOrganizador);
     }
 
     @Produces
