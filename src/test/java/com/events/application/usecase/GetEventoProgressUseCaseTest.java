@@ -51,6 +51,36 @@ class GetEventoProgressUseCaseTest {
     }
 
     @Test
+    void redondeaElPorcentajeADosDecimales() {
+        UUID eventoId = UUID.randomUUID();
+        when(eventoRepository.existsByIdAndOrganizadorId(eventoId, ORGANIZADOR_ID)).thenReturn(true);
+        when(subtareaRepository.findByEventoId(eventoId))
+                .thenReturn(List.of(subtarea(true), subtarea(true), subtarea(false)));
+
+        assertThat(useCase.execute(eventoId).percentage()).isEqualTo(66.67);
+
+        when(subtareaRepository.findByEventoId(eventoId))
+                .thenReturn(List.of(subtarea(true), subtarea(false), subtarea(false)));
+
+        assertThat(useCase.execute(eventoId).percentage()).isEqualTo(33.33);
+    }
+
+    @Test
+    void lasSubtareasPospuestasNoCuentanComoHechas() {
+        UUID eventoId = UUID.randomUUID();
+        Subtarea pospuesta = subtarea(false);
+        pospuesta.posponer("Esperando proveedor");
+        when(eventoRepository.existsByIdAndOrganizadorId(eventoId, ORGANIZADOR_ID)).thenReturn(true);
+        when(subtareaRepository.findByEventoId(eventoId)).thenReturn(List.of(subtarea(true), pospuesta));
+
+        EventoProgress progress = useCase.execute(eventoId);
+
+        assertThat(progress.done()).isEqualTo(1);
+        assertThat(progress.total()).isEqualTo(2);
+        assertThat(progress.percentage()).isEqualTo(50.0);
+    }
+
+    @Test
     void devuelveCeroCuandoElEventoNoTieneSubtareas() {
         UUID eventoId = UUID.randomUUID();
         when(eventoRepository.existsByIdAndOrganizadorId(eventoId, ORGANIZADOR_ID)).thenReturn(true);

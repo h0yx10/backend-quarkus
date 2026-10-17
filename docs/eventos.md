@@ -128,8 +128,8 @@ omitidos o `null` no se modifican.
 | Campo | Tipo | Descripcion |
 |---|---|---|
 | `done` | integer | subtareas en estado `DONE` |
-| `total` | integer | total de subtareas del evento |
-| `percentage` | number (decimal) | `done / total * 100` |
+| `total` | integer | total de subtareas del evento (incluye `PENDING` y `POSTPONED`) |
+| `percentage` | number (decimal) | `done / total * 100`, redondeado a 2 decimales (1 de 3 → `33.33`); `0` si no hay subtareas |
 
 **Response 404** si el evento no existe.
 

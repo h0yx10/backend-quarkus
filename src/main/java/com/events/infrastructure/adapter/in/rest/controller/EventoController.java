@@ -13,6 +13,7 @@ import static com.events.infrastructure.utils.constants.MessageConstants.EVENTO_
 import static com.events.infrastructure.utils.constants.MessageConstants.EVENTO_PROGRESS_RETRIEVED;
 import static com.events.infrastructure.utils.constants.MessageConstants.EVENTO_RETRIEVED;
 import static com.events.infrastructure.utils.constants.MessageConstants.EVENTO_UPDATED;
+import static com.events.infrastructure.utils.constants.MessageConstants.INVALID_REQUEST;
 
 import com.events.application.port.in.CreateEventoPort;
 import com.events.application.port.in.DeleteEventoPort;
@@ -30,6 +31,7 @@ import com.events.infrastructure.adapter.in.rest.mapper.EventoRestMapper;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,7 +78,7 @@ public class EventoController {
 
     @POST
     @Operation(summary = "Crear un evento", description = "Crea un evento y, opcionalmente, su plan inicial de subtareas (US-01, US-02).")
-    public Response create(@Valid CreateEventoRequest request) {
+    public Response create(@Valid @NotNull(message = INVALID_REQUEST) CreateEventoRequest request) {
         List<NuevaSubtareaData> subtareas = request.subtareas() == null
                 ? List.of()
                 : request.subtareas().stream()
@@ -99,7 +101,7 @@ public class EventoController {
     @PATCH
     @Path("/{id}")
     @Operation(summary = "Actualizar un evento", description = "Actualiza los campos enviados de un evento existente (US-03).")
-    public ApiResponse<EventoResponse> update(@PathParam("id") UUID id, UpdateEventoRequest request) {
+    public ApiResponse<EventoResponse> update(@PathParam("id") UUID id, @Valid @NotNull(message = INVALID_REQUEST) UpdateEventoRequest request) {
         var evento = updateEventoUseCase.execute(
                 id,
                 request.nombre(),

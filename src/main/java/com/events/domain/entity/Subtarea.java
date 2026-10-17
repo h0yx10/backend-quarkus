@@ -3,9 +3,12 @@ package com.events.domain.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public class Subtarea {
+
+    public static final int NOTA_MAXIMA = 1000;
 
     private UUID id;
 
@@ -82,19 +85,44 @@ public class Subtarea {
     }
 
     public void marcarHecha() {
+        marcarHecha(null);
+    }
+
+    /** Volver a marcar una subtarea DONE conserva la fecha real de cierre. */
+    public void marcarHecha(String nota) {
+        registrarNota(nota);
+        if (estado != EstadoSubtarea.DONE) {
+            // Precision de la BD (microsegundos): la respuesta del PATCH coincide con lecturas posteriores.
+            this.doneAt = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
+        }
         this.estado = EstadoSubtarea.DONE;
-        this.doneAt = LocalDateTime.now();
     }
 
     public void posponer(String nota) {
+        registrarNota(nota);
         this.estado = EstadoSubtarea.POSTPONED;
-        this.nota = nota;
         this.doneAt = null;
     }
 
     public void reabrir() {
+        reabrir(null);
+    }
+
+    public void reabrir(String nota) {
+        registrarNota(nota);
         this.estado = EstadoSubtarea.PENDING;
         this.doneAt = null;
+    }
+
+    /** Una nota enviada reemplaza la anterior ("" la vacia); omitirla conserva el historial. */
+    private void registrarNota(String nota) {
+        if (nota == null) {
+            return;
+        }
+        if (nota.length() > NOTA_MAXIMA) {
+            throw new IllegalArgumentException("La nota puede tener maximo " + NOTA_MAXIMA + " caracteres.");
+        }
+        this.nota = nota;
     }
 
     private static void requireHorasPositivas(BigDecimal horas) {

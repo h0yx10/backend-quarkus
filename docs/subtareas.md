@@ -134,7 +134,8 @@ si la reprogramacion supera el limite diario. **Response 404** si la subtarea no
 
 ## PATCH /api/subtasks/{id}/status
 
-**Descripcion:** marca una subtarea como hecha o pospuesta, con nota opcional (US-09).
+**Descripcion:** registra la ejecucion de una subtarea: hecha, pospuesta o de nuevo pendiente,
+con nota opcional en cualquier estado (US-09).
 
 **Path params**
 
@@ -147,9 +148,20 @@ si la reprogramacion supera el limite diario. **Response 404** si la subtarea no
 | Campo | Tipo | Requerido | Notas |
 |---|---|---|---|
 | `status` | enum: `PENDING`, `DONE`, `POSTPONED` | si | - |
-| `note` | string | no | usada sobre todo al posponer |
+| `note` | string | no | maximo 1000 caracteres; aplica a cualquier estado |
+
+Reglas de la nota y del cierre:
+
+- Enviar `note` reemplaza la nota anterior; `""` la vacia. Omitirla o enviar `null` la conserva
+  (por ejemplo, el motivo de un aplazamiento sigue visible cuando luego se marca `DONE`).
+- `doneAt` se fija la primera vez que la subtarea pasa a `DONE`. Volver a enviar `DONE` (por
+  ejemplo, para agregar una nota) conserva la fecha real de cierre. `PENDING` y `POSTPONED` lo
+  dejan en `null`.
 
 **Response 200** - `data`: `SubtareaResponse`.
+
+**Response 400** si falta el body o `status`, el estado no es valido o la nota supera 1000
+caracteres.
 
 **Response 409** (contrato especial de conflicto, ver [README.md](./README.md#sobre-de-respuesta-estandar))
 si la subtarea estaba en `DONE` y al reabrirla o posponerla vuelve a contar en un dia que

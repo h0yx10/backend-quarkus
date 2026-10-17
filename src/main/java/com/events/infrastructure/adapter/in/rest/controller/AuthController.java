@@ -8,6 +8,7 @@ import io.smallrye.common.annotation.Blocking;
 
 
 import static com.events.infrastructure.utils.constants.MessageConstants.CURRENT_USER_RETRIEVED;
+import static com.events.infrastructure.utils.constants.MessageConstants.INVALID_REQUEST;
 import static com.events.infrastructure.utils.constants.MessageConstants.LOGIN_SUCCESS;
 import static com.events.infrastructure.utils.constants.MessageConstants.LOGOUT_SUCCESS;
 import com.events.application.port.in.LogoutPort;
@@ -28,6 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirements;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @ApplicationScoped
 @Blocking
@@ -58,7 +60,7 @@ public class AuthController {
     @Path("/register")
     @SecurityRequirements
     @Operation(summary = "Registrarse", description = "Crea un organizador con rol ORGANIZADOR y devuelve su token de acceso.")
-    public Response register(@Valid RegisterRequest request) {
+    public Response register(@Valid @NotNull(message = INVALID_REQUEST) RegisterRequest request) {
         var result = registerUseCase.execute(request.nombre(), request.correo(), request.password());
         return Response.status(201).entity(ApiResponse.ok(REGISTER_SUCCESS, mapper.toResponse(result))).build();
     }
@@ -67,7 +69,7 @@ public class AuthController {
     @Path("/login")
     @SecurityRequirements
     @Operation(summary = "Iniciar sesion", description = "Valida correo y contrasena y devuelve un token de acceso (JWT).")
-    public ApiResponse<AuthResponse> login(@Valid LoginRequest request) {
+    public ApiResponse<AuthResponse> login(@Valid @NotNull(message = INVALID_REQUEST) LoginRequest request) {
         var result = loginUseCase.execute(request.correo(), request.password());
         return ApiResponse.ok(LOGIN_SUCCESS, mapper.toResponse(result));
     }
@@ -90,7 +92,7 @@ public class AuthController {
     @PATCH
     @Path("/me")
     @Operation(summary = "Editar perfil propio", description = "Cambiar password exige passwordActual. No permite roles ni activo.")
-    public ApiResponse<UsuarioResponse> updateMe(@Valid UpdatePerfilRequest body) {
+    public ApiResponse<UsuarioResponse> updateMe(@Valid @NotNull(message = INVALID_REQUEST) UpdatePerfilRequest body) {
         return ApiResponse.ok("Perfil actualizado correctamente.", mapper.toResponse(usuarios.updateCurrent(
                 body.nombre(), body.correo(), body.password(), body.passwordActual())));
     }

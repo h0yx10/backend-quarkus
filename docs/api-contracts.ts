@@ -124,7 +124,7 @@ export interface EventoResponse {
 export interface ProgressResponse {
   done: number;
   total: number;
-  percentage: number;          // 0..100
+  percentage: number;          // 0..100, redondeado a 2 decimales
 }
 
 // ---------- Subtareas ----------
@@ -144,7 +144,7 @@ export interface UpdateSubtareaRequest {   // PATCH parcial
 
 export interface ChangeSubtareaStatusRequest {
   status: EstadoSubtarea;           // requerido; sacar una subtarea de DONE puede dar 409 por sobrecarga
-  note?: string;                    // opcional (tipicamente al posponer)
+  note?: string;                    // opcional en cualquier estado, max 1000; omitir conserva la anterior, "" la vacia
 }
 
 export interface SubtareaResponse {

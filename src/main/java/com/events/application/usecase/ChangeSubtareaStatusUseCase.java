@@ -36,9 +36,9 @@ public class ChangeSubtareaStatusUseCase implements ChangeSubtareaStatusPort {
         }
 
         switch (estado) {
-            case DONE -> subtarea.marcarHecha();
+            case DONE -> subtarea.marcarHecha(nota);
             case POSTPONED -> subtarea.posponer(nota);
-            case PENDING -> subtarea.reabrir();
+            case PENDING -> subtarea.reabrir(nota);
         }
 
         return subtareaRepository.save(subtarea);

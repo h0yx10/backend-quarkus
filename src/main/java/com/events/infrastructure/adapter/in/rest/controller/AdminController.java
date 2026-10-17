@@ -14,7 +14,10 @@ import com.events.infrastructure.adapter.in.rest.mapper.UsuarioRestMapper;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
+
+import static com.events.infrastructure.utils.constants.MessageConstants.INVALID_REQUEST;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -47,14 +50,14 @@ public class AdminController {
     }
     @POST
     @Operation(summary = "Crear usuario", description = "Roles por defecto: ORGANIZADOR. No emite token.")
-    public Response create(@Valid CreateUsuarioRequest body) {
+    public Response create(@Valid @NotNull(message = INVALID_REQUEST) CreateUsuarioRequest body) {
         return Response.status(201).entity(ApiResponse.ok("Usuario creado correctamente.",
                 mapper.toResponse(usuarios.create(body.nombre(), body.correo(), body.password(), body.roles())))).build();
     }
     @PATCH
     @Path("/{id}")
     @Operation(summary = "Actualizar usuario", description = "La contrasena propia exige passwordActual; activo requiere perfil.")
-    public ApiResponse<UsuarioResponse> update(@PathParam("id") UUID id, @Valid UpdateUsuarioRequest body) {
+    public ApiResponse<UsuarioResponse> update(@PathParam("id") UUID id, @Valid @NotNull(message = INVALID_REQUEST) UpdateUsuarioRequest body) {
         return ApiResponse.ok("Usuario actualizado correctamente.", mapper.toResponse(usuarios.update(id,
                 body.nombre(), body.correo(), body.password(), body.passwordActual(), body.roles(), body.activo())));
     }

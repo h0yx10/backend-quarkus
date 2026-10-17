@@ -9,6 +9,7 @@ import io.smallrye.common.annotation.Blocking;
 
 import static com.events.infrastructure.utils.constants.MessageConstants.CAPACIDAD_RETRIEVED;
 import static com.events.infrastructure.utils.constants.MessageConstants.CAPACIDAD_UPDATED;
+import static com.events.infrastructure.utils.constants.MessageConstants.INVALID_REQUEST;
 
 import com.events.application.port.in.GetCapacidadPort;
 import com.events.application.port.in.UpdateCapacidadPort;
@@ -19,6 +20,7 @@ import com.events.infrastructure.adapter.in.rest.dto.CapacidadResponse;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @ApplicationScoped
 @Blocking
@@ -46,7 +48,7 @@ public class CapacidadController {
 
     @PUT
     @Operation(summary = "Actualizar limite diario", description = "Actualiza el limite diario (rango permitido: 1..16 horas).")
-    public ApiResponse<CapacidadResponse> update(@Valid CapacidadRequest request) {
+    public ApiResponse<CapacidadResponse> update(@Valid @NotNull(message = INVALID_REQUEST) CapacidadRequest request) {
         CapacidadDiaria capacidad = updateCapacidadUseCase.execute(request.limiteHoras());
         return ApiResponse.ok(CAPACIDAD_UPDATED, toResponse(capacidad));
     }

@@ -5,7 +5,9 @@ import jakarta.ws.rs.core.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import io.smallrye.common.annotation.Blocking;
+import static com.events.infrastructure.utils.constants.MessageConstants.INVALID_REQUEST;
 import java.util.*;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 /** Separacion necesaria para resolver las rutas anidadas sin competir con /api/events. */
@@ -14,7 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 public class EventSubtasksController {
     @Inject SubtareaController controller;
     @POST @Operation(summary="Agregar subtarea")
-    public Response create(@PathParam("eventId") UUID id,@Valid CreateSubtareaRequest request) { return controller.create(id,request); }
+    public Response create(@PathParam("eventId") UUID id,@Valid @NotNull(message=INVALID_REQUEST) CreateSubtareaRequest request) { return controller.create(id,request); }
     @GET @Operation(summary="Listar subtareas de un evento")
     public ApiResponse<List<SubtareaResponse>> list(@PathParam("eventId") UUID id) { return controller.listByEvento(id); }
 }

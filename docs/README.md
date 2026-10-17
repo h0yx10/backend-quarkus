@@ -33,7 +33,7 @@ Errores segun el caso:
 |---|---|
 | `401 Unauthorized` | sin token, token invalido/expirado, o credenciales de login incorrectas |
 | `403 Forbidden` | el token es valido pero el rol no alcanza (ej. `/api/admin/**` sin ADMIN) |
-| `400 Bad Request` | body invalido / no cumple validaciones (`@NotBlank`, `@NotNull`, `@Size`, `@DecimalMin`) o JSON mal formado |
+| `400 Bad Request` | body ausente, invalido / no cumple validaciones (`@NotBlank`, `@NotNull`, `@Size`, `@DecimalMin`) o JSON mal formado |
 | `404 Not Found` | usuario, evento, subtarea u organizador no encontrado, **o perteneciente a otro usuario** |
 | `409 Conflict` | correo ya registrado, baja con dependencias, último ADMIN habilitado, o la reprogramacion de una subtarea supera el limite diario de horas (ver contrato especial abajo) |
 | `500 Internal Server Error` | error inesperado |

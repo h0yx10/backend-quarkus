@@ -70,6 +70,18 @@ class ChangeSubtareaStatusUseCaseTest {
     }
 
     @Test
+    void registraLaNotaAlMarcarComoHecha() {
+        UUID id = UUID.randomUUID();
+        when(subtareaRepository.findByIdAndOrganizadorId(id, ORGANIZADOR_ID)).thenReturn(Optional.of(nuevaSubtarea()));
+        when(subtareaRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var actualizada = useCase.execute(id, EstadoSubtarea.DONE, "Catering confirmado");
+
+        assertThat(actualizada.getEstado()).isEqualTo(EstadoSubtarea.DONE);
+        assertThat(actualizada.getNota()).isEqualTo("Catering confirmado");
+    }
+
+    @Test
     void posponeConNotaOpcional() {
         UUID id = UUID.randomUUID();
         when(subtareaRepository.findByIdAndOrganizadorId(id, ORGANIZADOR_ID)).thenReturn(Optional.of(nuevaSubtarea()));

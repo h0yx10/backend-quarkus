@@ -32,7 +32,8 @@ public class GetEventoProgressUseCase implements GetEventoProgressPort {
         List<Subtarea> subtareas = subtareaRepository.findByEventoId(eventoId);
         long total = subtareas.size();
         long done = subtareas.stream().filter(s -> s.getEstado() == EstadoSubtarea.DONE).count();
-        double percentage = total == 0 ? 0.0 : (done * 100.0) / total;
+        // Redondeado a 2 decimales (1/3 -> 33.33) para que la barra no muestre 33.333333333333336.
+        double percentage = total == 0 ? 0.0 : Math.round(done * 10000.0 / total) / 100.0;
         return new EventoProgress(done, total, percentage);
     }
 }

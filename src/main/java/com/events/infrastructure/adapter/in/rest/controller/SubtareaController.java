@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.Response;
 import io.smallrye.common.annotation.Blocking;
 
 
+import static com.events.infrastructure.utils.constants.MessageConstants.INVALID_REQUEST;
 import static com.events.infrastructure.utils.constants.MessageConstants.SUBTAREA_CREATED;
 import static com.events.infrastructure.utils.constants.MessageConstants.SUBTAREA_DELETED;
 import static com.events.infrastructure.utils.constants.MessageConstants.SUBTAREA_LIST_RETRIEVED;
@@ -27,6 +28,7 @@ import com.events.infrastructure.adapter.in.rest.mapper.SubtareaRestMapper;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -77,7 +79,7 @@ public class SubtareaController {
             description = "Actualiza los campos enviados. Cambiar targetDate y/o estimatedHours valida "
                     + "sobrecarga diaria (US-06, US-07) y devuelve 409 si se supera el limite."
     )
-    public ApiResponse<SubtareaResponse> update(@PathParam("id") UUID id, @Valid UpdateSubtareaRequest request) {
+    public ApiResponse<SubtareaResponse> update(@PathParam("id") UUID id, @Valid @NotNull(message = INVALID_REQUEST) UpdateSubtareaRequest request) {
         var subtarea = updateSubtareaUseCase.execute(id, request.name(), request.description(), request.targetDate(), request.estimatedHours());
         return ApiResponse.ok(SUBTAREA_UPDATED, mapper.toResponse(subtarea));
     }
@@ -85,7 +87,7 @@ public class SubtareaController {
     @PATCH
     @Path("/{id}/status")
     @Operation(summary = "Registrar ejecucion", description = "Marca una subtarea como hecha o pospuesta, con nota opcional (US-09).")
-    public ApiResponse<SubtareaResponse> changeStatus(@PathParam("id") UUID id, @Valid ChangeSubtareaStatusRequest request) {
+    public ApiResponse<SubtareaResponse> changeStatus(@PathParam("id") UUID id, @Valid @NotNull(message = INVALID_REQUEST) ChangeSubtareaStatusRequest request) {
         var subtarea = changeSubtareaStatusUseCase.execute(id, request.status(), request.note());
         return ApiResponse.ok(SUBTAREA_STATUS_UPDATED, mapper.toResponse(subtarea));
     }
