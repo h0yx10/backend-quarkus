@@ -30,8 +30,6 @@ public class UpdateSubtareaUseCase implements UpdateSubtareaPort {
         Subtarea subtarea = subtareaRepository.findByIdAndOrganizadorId(subtareaId, currentOrganizador.currentOrganizadorId())
                 .orElseThrow(() -> new SubtareaNotFoundException("No encontramos la subtarea solicitada."));
 
-        subtarea.getEvento().validarFechaSubtarea(fechaObjetivo);
-
         // Una subtarea DONE no suma a la carga diaria, asi que moverla no puede sobrecargar el dia.
         boolean cambiaCarga = fechaObjetivo != null || horasEstimadas != null;
         if (cambiaCarga && subtarea.getEstado() != EstadoSubtarea.DONE) {

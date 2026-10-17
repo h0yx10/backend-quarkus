@@ -170,7 +170,7 @@ se compara contra el limite diario (US-12, 6h por defecto). Si se supera, `PATCH
 `409` sin guardar el cambio; el cliente resuelve reintentando con otra fecha (mover) o con
 menos horas (reducir), que es la misma operacion sin conflicto. La misma regla aplica al crear
 subtareas (sueltas o iniciales de un evento) y al sacar una subtarea de `DONE`, porque vuelve a
-sumar horas. Una subtarea nunca puede quedar programada despues del dia del evento (`400`).
+sumar horas. Una fecha posterior al dia del evento se acepta; el frontend la advierte.
 
 ## Pruebas y cobertura
 

@@ -138,7 +138,7 @@ export interface CreateSubtareaRequest {
 export interface UpdateSubtareaRequest {   // PATCH parcial
   description?: string; // maximo 255; omitido/null conserva el valor; "" lo vacía
   name?: string;
-  targetDate?: DateISO;          // si cambia targetDate o estimatedHours se valida sobrecarga (409); no posterior al evento (400)
+  targetDate?: DateISO;          // si cambia targetDate o estimatedHours se valida sobrecarga (409)
   estimatedHours?: number;          // > 0
 }
 
@@ -162,7 +162,7 @@ export interface SubtareaResponse {
 
 // ---------- Conflictos ----------
 export interface OverloadCheckRequest {   // body obligatorio: enviar {} para previsualizar sin cambios
-  targetDate?: DateISO;    // si se omite, usa la actual de la subtarea; no posterior al evento (400)
+  targetDate?: DateISO;    // si se omite, usa la actual de la subtarea
   estimatedHours?: number;    // si se omite, usa las actuales; > 0 (400)
 }
 

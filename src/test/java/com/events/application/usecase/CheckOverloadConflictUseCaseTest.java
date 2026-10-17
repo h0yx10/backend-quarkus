@@ -1,7 +1,6 @@
 package com.events.application.usecase;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,7 +16,6 @@ import com.events.domain.entity.Usuario;
 import com.events.domain.entity.Subtarea;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -85,17 +83,5 @@ class CheckOverloadConflictUseCaseTest {
         assertThat(result.conflict()).isFalse();
         assertThat(result.plannedHours()).isEqualByComparingTo("6");
         assertThat(result.exceedsBy()).isEqualByComparingTo("0");
-    }
-
-    @Test
-    void rechazaPrevisualizarUnaFechaPosteriorAlEvento() {
-        Organizador organizador = new Organizador(new Usuario("Demo", "demo@x.com", "hash"));
-        LocalDateTime fechaEvento = LocalDateTime.now().plusDays(5);
-        Subtarea subtarea = new Subtarea("Buscar proveedor", LocalDate.now().plusDays(1), BigDecimal.ONE);
-        subtarea.asociarEvento(new Evento("Evento", "Social", null, null, fechaEvento, null, null, organizador));
-        when(subtareaRepository.findByIdAndOrganizadorId(any(), any())).thenReturn(Optional.of(subtarea));
-
-        assertThatThrownBy(() -> useCase.execute(null, fechaEvento.toLocalDate().plusDays(1), null))
-                .isInstanceOf(IllegalArgumentException.class);
     }
 }

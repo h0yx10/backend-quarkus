@@ -63,9 +63,7 @@ Todos los campos de la respuesta son en inglés. Sin descripción,
 `data.description` es null. Más de 255 caracteres responde 400 con message
 `La descripcion puede tener maximo 255 caracteres.`.
 
-**Response 400** si falla alguna validacion, incluido un `targetDate` posterior al dia del
-evento (`La fecha objetivo no puede ser posterior a la fecha del evento (yyyy-MM-dd).`).
-**Response 404** si el evento no existe.
+**Response 400** si falla alguna validacion. **Response 404** si el evento no existe.
 **Response 409** si las horas planificadas del dia, incluyendo la nueva subtarea, superan
 el limite diario. El cuerpo agrega `plannedHours`, `limitHours` y `exceedsBy` al contrato
 estandar de conflicto descrito en [README.md](./README.md#sobre-de-respuesta-estandar).
@@ -92,8 +90,8 @@ estandar de conflicto descrito en [README.md](./README.md#sobre-de-respuesta-est
 `estimatedHours` reprograma la subtarea (US-06) y valida sobrecarga diaria contra el limite
 configurado en [capacidad.md](./capacidad.md) (US-07); si se supera, la operacion se rechaza con
 **409** y no se guarda el cambio. Una subtarea `DONE` no suma horas al dia, por lo que moverla
-no valida sobrecarga. La nueva fecha puede ser pasada (queda como vencida en "Hoy"), pero no
-posterior al dia del evento.
+no valida sobrecarga. La nueva fecha puede ser pasada (queda como vencida en "Hoy") o posterior
+al dia del evento: el backend la acepta y el frontend advierte antes de guardarla.
 
 **Path params**
 
@@ -107,7 +105,7 @@ posterior al dia del evento.
 |---|---|---|
 | `name` | string | - |
 | `description` | string | maximo 255; omitido/null conserva el valor |
-| `targetDate` | date ISO `yyyy-MM-dd` | no posterior al dia del evento |
+| `targetDate` | date ISO `yyyy-MM-dd` | - |
 | `estimatedHours` | number (decimal) | > 0 si se envia |
 
 Ejemplo para editar solamente la descripción:
@@ -125,7 +123,7 @@ message `La descripcion puede tener maximo 255 caracteres.`.
 
 **Response 200** - `data`: `SubtareaResponse`, con description actualizado.
 
-**Response 400** si `targetDate` es posterior al dia del evento o falla otra validacion.
+**Response 400** si falta el body o falla alguna validacion.
 
 **Response 409** (contrato especial de conflicto, ver [README.md](./README.md#sobre-de-respuesta-estandar))
 si la reprogramacion supera el limite diario. **Response 404** si la subtarea no existe.

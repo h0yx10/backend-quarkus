@@ -48,7 +48,6 @@ public class CreateEventoUseCase implements CreateEventoPort {
 
         Map<LocalDate, BigDecimal> nuevasHorasPorFecha = new HashMap<>();
         for (NuevaSubtareaData data : subtareas) {
-            evento.validarFechaSubtarea(data.fechaObjetivo());
             nuevasHorasPorFecha.merge(data.fechaObjetivo(), data.horasEstimadas(), BigDecimal::add);
         }
         capacidadDiaria.validar(organizador.getId(), nuevasHorasPorFecha, null);

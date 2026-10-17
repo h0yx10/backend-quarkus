@@ -98,20 +98,22 @@ class UpdateSubtareaUseCaseTest {
     }
 
     @Test
-    void rechazaReprogramarDespuesDelEventoSinGuardar() {
+    void permiteReprogramarDespuesDelEventoPorqueSoloSeAdvierteEnLaInterfaz() {
         Organizador organizador = new Organizador(new Usuario("Demo", "demo@x.com", "hash"));
         LocalDateTime fechaEvento = LocalDateTime.now().plusDays(10);
         Evento evento = new Evento("Evento", "Social", null, null, fechaEvento, null, null, organizador);
         Subtarea subtarea = new Subtarea("Buscar proveedor", LocalDate.now().plusDays(1), BigDecimal.ONE);
         subtarea.asociarEvento(evento);
         when(subtareaRepository.findByIdAndOrganizadorId(any(), any())).thenReturn(Optional.of(subtarea));
+        when(capacidadDiariaRepository.findCurrentByOrganizadorId(any())).thenReturn(Optional.empty());
+        when(subtareaRepository.sumHorasPlanificadas(any(), any(), any())).thenReturn(BigDecimal.ZERO);
+        when(subtareaRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        LocalDate despuesDelEvento = fechaEvento.toLocalDate().plusDays(1);
-        assertThatThrownBy(() -> useCase.execute(null, null, despuesDelEvento, null))
-                .isInstanceOf(IllegalArgumentException.class);
+        LocalDate despuesDelEvento = fechaEvento.toLocalDate().plusDays(2);
+        useCase.execute(null, null, despuesDelEvento, null);
 
-        verify(subtareaRepository, never()).save(any());
-        assertThat(subtarea.getFechaObjetivo()).isEqualTo(LocalDate.now().plusDays(1));
+        assertThat(subtarea.getFechaObjetivo()).isEqualTo(despuesDelEvento);
+        verify(subtareaRepository).save(subtarea);
     }
 
     @Test

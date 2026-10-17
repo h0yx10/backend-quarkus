@@ -32,7 +32,6 @@ public class CreateSubtareaUseCase implements CreateSubtareaPort {
     public Subtarea execute(UUID eventoId, String nombre, String descripcion, LocalDate fechaObjetivo, BigDecimal horasEstimadas) {
         Evento evento = eventoRepository.findByIdAndOrganizadorId(eventoId, currentOrganizador.currentOrganizadorId())
                 .orElseThrow(() -> new EventoNotFoundException("No encontramos el evento solicitado."));
-        evento.validarFechaSubtarea(fechaObjetivo);
         capacidadDiaria.validar(evento.getOrganizador().getId(), fechaObjetivo, horasEstimadas, null);
 
         Subtarea subtarea = new Subtarea(nombre, descripcion, fechaObjetivo, horasEstimadas);

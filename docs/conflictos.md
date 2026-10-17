@@ -20,7 +20,7 @@ el cliente muestre una advertencia antes de confirmar un `PATCH /api/subtasks/{i
 
 | Campo | Tipo |
 |---|---|
-| `targetDate` | date ISO `yyyy-MM-dd`; si se omite, usa la actual. No posterior al dia del evento. |
+| `targetDate` | date ISO `yyyy-MM-dd`; si se omite, usa la actual |
 | `estimatedHours` | number (decimal) > 0; si se omite, usa las actuales |
 
 El body es obligatorio; para previsualizar sin cambios envia `{}`.
@@ -28,8 +28,7 @@ El body es obligatorio; para previsualizar sin cambios envia `{}`.
 **Response 200** - `data`: `OverloadCheckResponse`. Si la subtarea esta `DONE`, `conflict` es
 `false`: una subtarea hecha no suma horas al dia.
 
-**Response 400** si falta el body, `estimatedHours` es `<= 0` o `targetDate` es posterior al
-dia del evento (las mismas reglas que `PATCH /api/subtasks/{id}`).
+**Response 400** si falta el body o `estimatedHours` es `<= 0`.
 
 **Response 404** si la subtarea no existe.
 

@@ -96,17 +96,4 @@ class CreateSubtareaUseCaseTest {
                 });
         verify(subtareaRepository, never()).save(any());
     }
-
-    @Test
-    void rechazaSubtareaPosteriorAlEventoSinConsultarCapacidad() {
-        UUID eventoId = UUID.randomUUID();
-        Evento evento = new Evento("Boda", "Social", null, null, java.time.LocalDateTime.of(2026, 12, 1, 18, 0), null, null,
-                new Organizador(new Usuario("Demo", "demo@x.com", "hash")));
-        when(eventoRepository.findByIdAndOrganizadorId(eventoId, ORGANIZADOR_ID)).thenReturn(Optional.of(evento));
-
-        assertThatThrownBy(() -> useCase.execute(eventoId, "Catering", LocalDate.of(2026, 12, 2), BigDecimal.ONE))
-                .isInstanceOf(IllegalArgumentException.class);
-        verify(capacidadDiariaRepository, never()).findCurrentByOrganizadorId(any());
-        verify(subtareaRepository, never()).save(any());
-    }
 }

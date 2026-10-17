@@ -55,20 +55,6 @@ class CreateEventoUseCaseTest {
     }
 
     @Test
-    void rechazaSubtareasInicialesPosterioresAlEvento() {
-        UUID organizadorId = UUID.randomUUID();
-        when(currentOrganizador.currentOrganizadorId()).thenReturn(organizadorId);
-        when(organizadorRepository.findById(organizadorId)).thenReturn(Optional.of(new Organizador(new Usuario("Demo", "demo@x.com", "hash"))));
-
-        LocalDateTime fechaEvento = LocalDateTime.now().plusDays(10);
-        var subtareas = List.of(new NuevaSubtareaData("Reservar salon", null, fechaEvento.toLocalDate().plusDays(1), BigDecimal.ONE));
-
-        assertThatThrownBy(() -> useCase.execute("Boda", "Social", null, null, fechaEvento, null, null, subtareas))
-                .isInstanceOf(IllegalArgumentException.class);
-        verify(eventoRepository, never()).save(any());
-    }
-
-    @Test
     void rechazaSubtareasInicialesQueJuntasSuperanElLimiteDelDia() {
         UUID organizadorId = UUID.randomUUID();
         when(currentOrganizador.currentOrganizadorId()).thenReturn(organizadorId);

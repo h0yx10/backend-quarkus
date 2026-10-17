@@ -31,9 +31,6 @@ public class CheckOverloadConflictUseCase implements CheckOverloadConflictPort {
         Subtarea subtarea = subtareaRepository.findByIdAndOrganizadorId(subtareaId, currentOrganizador.currentOrganizadorId())
                 .orElseThrow(() -> new SubtareaNotFoundException("No encontramos la subtarea solicitada."));
 
-        // Mismas reglas que PATCH /api/subtasks/{id}, para que la previsualizacion no prometa algo que luego se rechaza.
-        subtarea.getEvento().validarFechaSubtarea(nuevaFecha);
-
         LocalDate fechaEfectiva = nuevaFecha != null ? nuevaFecha : subtarea.getFechaObjetivo();
         BigDecimal horasEfectivas = nuevasHoras != null ? nuevasHoras : subtarea.getHorasEstimadas();
         UUID organizadorId = subtarea.getEvento().getOrganizador().getId();
