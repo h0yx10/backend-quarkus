@@ -130,7 +130,30 @@ omitidos o `null` no se modifican.
 | `total` | integer | total de subtareas del evento (incluye `PENDING` y `POSTPONED`) |
 | `percentage` | number (decimal) | `done / total * 100`, redondeado a 2 decimales (1 de 3 → `33.33`); `0` si no hay subtareas |
 
-**Response 404** si el evento no existe.
+Ejemplo con 1 de 3 gestiones hechas (las `POSTPONED` cuentan en el total, no como hechas):
+
+```http
+GET /api/events/0a9e1c44-3f2b-4d6a-8e7f-1b2c3d4e5f60/progress
+Authorization: Bearer <token>
+```
+
+```json
+{
+  "success": true,
+  "message": "El progreso del evento se consulto correctamente.",
+  "data": { "done": 1, "total": 3, "percentage": 33.33 },
+  "timestamp": "2026-11-04T21:20:11.512Z"
+}
+```
+
+El progreso se recalcula en cada consulta: tras un `PATCH /api/subtasks/{id}/status` la
+siguiente lectura ya refleja el cambio.
+
+**Response 404** si el evento no existe (o es de otro organizador):
+
+```json
+{ "success": false, "message": "No encontramos el evento solicitado.", "timestamp": "2026-11-04T21:20:11.512Z" }
+```
 
 ---
 

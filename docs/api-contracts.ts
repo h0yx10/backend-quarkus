@@ -27,6 +27,13 @@ export interface CapacityConflictError extends ApiError {
   exceedsBy: number;
 }
 
+// 409 al bajar el limite diario por debajo de dias ya planificados (PUT /api/capacity)
+export interface CapacityBelowPlannedError extends ApiError {
+  code: 'capacity_below_planned';
+  limitHours: number;
+  overloadedDays: { date: DateISO; plannedHours: number }[];
+}
+
 export type UUID = string;
 export type DateISO = string;      // "2026-05-01"
 export type DateTimeISO = string;  // "2026-05-20T18:00:00"

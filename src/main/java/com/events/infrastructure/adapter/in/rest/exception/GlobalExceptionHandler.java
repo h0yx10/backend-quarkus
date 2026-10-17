@@ -26,6 +26,8 @@ public class GlobalExceptionHandler implements ExceptionMapper<Throwable> {
     @Override
     public Response toResponse(Throwable ex) {
         if(ex instanceof CapacityConflictException c) return Response.status(409).entity(Map.of("success",false,"code","overload_conflict","message",c.getMessage(),"timestamp",Instant.now().toString(),"plannedHours",c.getPlannedHours(),"limitHours",c.getLimitHours(),"exceedsBy",c.getExceedsBy())).build();
+        if(ex instanceof LimiteBajoCargaPlanificadaException l) return Response.status(409).entity(Map.of("success",false,"code","capacity_below_planned","message",l.getMessage(),"timestamp",Instant.now().toString(),"limitHours",l.getLimitHours(),
+                "overloadedDays",l.getDiasSobrecargados().entrySet().stream().map(d -> Map.of("date",d.getKey().toString(),"plannedHours",d.getValue())).toList())).build();
         if(ex instanceof CorreoYaRegistradoException || ex instanceof UsuarioConflictException) return error(409,ex.getMessage());
         if(ex instanceof CredencialesInvalidasException) return error(401,ex.getMessage());
         if(ex instanceof UsuarioNotFoundException || ex instanceof EventoNotFoundException || ex instanceof SubtareaNotFoundException || ex instanceof OrganizadorNotFoundException) return error(404,ex.getMessage());

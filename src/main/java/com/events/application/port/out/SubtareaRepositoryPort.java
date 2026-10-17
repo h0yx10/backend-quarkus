@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedMap;
 import java.util.UUID;
 
 public interface SubtareaRepositoryPort {
@@ -26,4 +27,10 @@ public interface SubtareaRepositoryPort {
      * excluyendo (si se indica) la propia subtarea que se esta reprogramando para no duplicar su aporte.
      */
     BigDecimal sumHorasPlanificadas(UUID organizadorId, LocalDate fecha, UUID excludeSubtareaId);
+
+    /**
+     * Horas no DONE planificadas por dia desde la fecha indicada (incluida), ordenadas por fecha.
+     * Solo aparecen los dias con al menos una subtarea.
+     */
+    SortedMap<LocalDate, BigDecimal> horasPlanificadasPorDiaDesde(UUID organizadorId, LocalDate desde);
 }

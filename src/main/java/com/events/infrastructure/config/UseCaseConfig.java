@@ -217,7 +217,8 @@ public class UseCaseConfig {
     @ApplicationScoped
     public UpdateCapacidadPort updateCapacidadPort(CapacidadDiariaRepositoryPort capacidadDiariaRepository,
                                                     OrganizadorRepositoryPort organizadorRepository,
+                                                    SubtareaRepositoryPort subtareaRepository,
                                                     CurrentOrganizadorPort currentOrganizador) {
-        return new UpdateCapacidadUseCase(capacidadDiariaRepository, organizadorRepository, currentOrganizador);
+        return new UpdateCapacidadUseCase(capacidadDiariaRepository, organizadorRepository, subtareaRepository, currentOrganizador);
     }
 }

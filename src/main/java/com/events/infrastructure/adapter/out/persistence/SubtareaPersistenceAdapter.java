@@ -39,4 +39,11 @@ public class SubtareaPersistenceAdapter implements SubtareaRepositoryPort {
         var q=em.createQuery(jpql,BigDecimal.class).setParameter("owner",owner).setParameter("fecha",fecha).setParameter("done",EstadoSubtarea.DONE);
         if(excluded!=null) q.setParameter("excluded",excluded); return q.getSingleResult();
     }
+    public SortedMap<LocalDate, BigDecimal> horasPlanificadasPorDiaDesde(UUID owner, LocalDate desde) {
+        var rows=em.createQuery("select s.fechaObjetivo, sum(s.horasEstimadas) from SubtareaEntity s where s.evento.organizador.id=:owner and s.estado<>:done and s.fechaObjetivo>=:desde group by s.fechaObjetivo",Object[].class)
+                .setParameter("owner",owner).setParameter("done",EstadoSubtarea.DONE).setParameter("desde",desde).getResultList();
+        SortedMap<LocalDate, BigDecimal> horas=new TreeMap<>();
+        for(Object[] row:rows) horas.put((LocalDate)row[0],(BigDecimal)row[1]);
+        return horas;
+    }
 }

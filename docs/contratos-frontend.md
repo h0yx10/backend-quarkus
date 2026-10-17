@@ -79,6 +79,13 @@ interface CapacityConflictError extends ApiError {
   limitHours: number;
   exceedsBy: number;
 }
+
+// 409 al bajar el limite diario por debajo de dias ya planificados (PUT /api/capacity)
+interface CapacityBelowPlannedError extends ApiError {
+  code: 'capacity_below_planned';
+  limitHours: number;
+  overloadedDays: { date: DateISO; plannedHours: number }[];
+}
 ```
 
 | Status | Significado | Que hacer en el front |
@@ -303,7 +310,7 @@ Todas las rutas protegidas requieren `Authorization: Bearer <token>`.
 | 📅 | POST | `/api/events/{eventId}/subtasks` | `CreateSubtareaRequest` | **201** `SubtareaResponse` | 400, 401, 403, 404 |
 | 📅 | GET | `/api/events/{eventId}/subtasks` | - | 200 `SubtareaResponse[]` | 400, 401, 403, 404 |
 | 📅 | PATCH | `/api/subtasks/{id}` | `UpdateSubtareaRequest` | 200 `SubtareaResponse` | 400, 401, 403, 404, **409** `CapacityConflictError` |
-| 📅 | PATCH | `/api/subtasks/{id}/status` | `ChangeSubtareaStatusRequest` | 200 `SubtareaResponse` | 400, 401, 403, 404 |
+| 📅 | PATCH | `/api/subtasks/{id}/status` | `ChangeSubtareaStatusRequest` | 200 `SubtareaResponse` | 400, 401, 403, 404, **409** `CapacityConflictError` (al sacar de DONE) |
 | 📅 | DELETE | `/api/subtasks/{id}` | - | 200 `null` | 400, 401, 403, 404 |
 | 📅 | POST | `/api/subtasks/{id}/conflicts/overload` | `OverloadCheckRequest` | 200 `OverloadCheckResponse` (no guarda) | 400, 401, 403, 404 |
 
@@ -312,7 +319,7 @@ Todas las rutas protegidas requieren `Authorization: Bearer <token>`.
 | | Metodo | Ruta | Body | Respuesta `data` | Errores |
 |---|---|---|---|---|---|
 | 📅 | GET | `/api/capacity` | - | 200 `CapacidadResponse` | 400, 401, 403 |
-| 📅 | PUT | `/api/capacity` | `CapacidadRequest` | 200 `CapacidadResponse` | 400, 401, 403 |
+| 📅 | PUT | `/api/capacity` | `CapacidadRequest` | 200 `CapacidadResponse` | 400, 401, 403, **409** `CapacityBelowPlannedError` |
 
 ### Vista Hoy
 

@@ -156,14 +156,68 @@ Reglas de la nota y del cierre:
   ejemplo, para agregar una nota) conserva la fecha real de cierre. `PENDING` y `POSTPONED` lo
   dejan en `null`.
 
+Ejemplo: registrar como hecha con nota.
+
+```http
+PATCH /api/subtasks/7c1f0d2e-5b8a-4c3e-9f1a-2d4b6e8a0c11/status
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "status": "DONE", "note": "Proveedor confirmo el menu por correo" }
+```
+
 **Response 200** - `data`: `SubtareaResponse`.
 
+```json
+{
+  "success": true,
+  "message": "El estado de la subtarea se actualizo correctamente.",
+  "data": {
+    "id": "7c1f0d2e-5b8a-4c3e-9f1a-2d4b6e8a0c11",
+    "eventId": "0a9e1c44-3f2b-4d6a-8e7f-1b2c3d4e5f60",
+    "name": "Confirmar catering",
+    "description": null,
+    "targetDate": "2026-11-05",
+    "estimatedHours": 2.0,
+    "status": "DONE",
+    "note": "Proveedor confirmo el menu por correo",
+    "doneAt": "2026-11-04T16:20:11.482913",
+    "createdAt": "2026-10-20T09:12:03.104552"
+  },
+  "timestamp": "2026-11-04T21:20:11.512Z"
+}
+```
+
+Ejemplo: posponer con el motivo.
+
+```json
+{ "status": "POSTPONED", "note": "Esperando confirmacion del salon" }
+```
+
 **Response 400** si falta el body o `status`, el estado no es valido o la nota supera 1000
-caracteres.
+caracteres:
+
+```json
+{ "success": false, "message": "La nota puede tener maximo 1000 caracteres.", "timestamp": "2026-11-04T21:20:11.512Z" }
+```
 
 **Response 409** (contrato especial de conflicto, ver [README.md](./README.md#sobre-de-respuesta-estandar))
 si la subtarea estaba en `DONE` y al reabrirla o posponerla vuelve a contar en un dia que
-superaria el limite diario. No se guarda el cambio. **Response 404** si la subtarea no existe.
+superaria el limite diario. No se guarda el cambio:
+
+```json
+{
+  "success": false,
+  "code": "overload_conflict",
+  "message": "Quedarias con 8.00h planificadas (limite 6h)",
+  "plannedHours": 8.00,
+  "limitHours": 6,
+  "exceedsBy": 2.00,
+  "timestamp": "2026-11-04T21:20:11.512Z"
+}
+```
+
+**Response 404** si la subtarea no existe (o es de otro organizador).
 
 ---
 
