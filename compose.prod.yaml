@@ -1,0 +1,29 @@
+# Override para el VPS: HTTPS con Let's Encrypt y redireccion de HTTP a HTTPS.
+#   docker compose -f compose.yaml -f compose.prod.yaml up -d --build
+# Requisitos: un registro DNS A de API_DOMAIN apuntando al VPS y los puertos 80/443 abiertos.
+services:
+  traefik:
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=events-platform_backend
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls.certresolver=letsencrypt
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:?Configura ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+      - --ping=true
+      - --log.level=INFO
+      - --accesslog=true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/letsencrypt
+
+volumes:
+  letsencrypt:

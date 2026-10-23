@@ -1,15 +1,102 @@
+# Plataforma completa: Traefik (gateway) + identity-service + planning-service.
+#   Local:      docker compose up -d --build            -> http://localhost
+#   Produccion: docker compose -f compose.yaml -f compose.prod.yaml up -d --build
+#
+# Solo Traefik publica puertos. Los servicios viven en la red privada "backend" y se hablan por
+# HTTP plano; el TLS termina en Traefik.
+name: events-platform
+
+x-service-env: &service-env
+  DB_URL: ${DB_URL:?Configura DB_URL en .env}
+  DB_USERNAME: ${DB_USERNAME:?Configura DB_USERNAME en .env}
+  DB_PASSWORD: ${DB_PASSWORD:?Configura DB_PASSWORD en .env}
+
 services:
-  app:
-    build: .
-    image: events-api-quarkus:local
+  traefik:
+    image: traefik:v3.6
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=events-platform_backend
+      - --entrypoints.web.address=:80
+      - --ping=true
+      - --log.level=INFO
+      - --accesslog=true
     ports:
-      - "${PORT:-8080}:${PORT:-8080}"
-    environment:
-      PORT: ${PORT:-8080}
-      DB_URL: ${DB_URL:?Configura DB_URL de Supabase}
-      DB_USERNAME: ${DB_USERNAME:?Configura DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD:?Configura DB_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET:?Configura JWT_SECRET}
-      JWT_EXPIRATION_MINUTES: ${JWT_EXPIRATION_MINUTES:-120}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:4200}
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [backend]
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
     restart: unless-stopped
+    labels:
+      traefik.enable: "true"
+      # CORS una sola vez para toda la API. Responde los preflight OPTIONS sin llegar a forwardAuth.
+      traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist: ${CORS_ORIGIN:-http://localhost:4200}
+      traefik.http.middlewares.cors.headers.accesscontrolallowmethods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+      traefik.http.middlewares.cors.headers.accesscontrolallowheaders: Authorization,Content-Type,Accept
+      traefik.http.middlewares.cors.headers.accesscontrolallowcredentials: "true"
+      traefik.http.middlewares.cors.headers.accesscontrolmaxage: "3600"
+      traefik.http.middlewares.cors.headers.addvaryheader: "true"
+      # Un cliente no puede hacerse pasar por otro enviando estos headers: se borran al entrar.
+      traefik.http.middlewares.strip-identity.headers.customrequestheaders.X-User-Id: ""
+      traefik.http.middlewares.strip-identity.headers.customrequestheaders.X-Organizador-Id: ""
+      traefik.http.middlewares.strip-identity.headers.customrequestheaders.X-Roles: ""
+      # identity-service valida el JWT (firma, revocacion, cuenta activa) y devuelve la identidad.
+      traefik.http.middlewares.auth.forwardauth.address: http://identity-service:8080/api/auth/verify
+      traefik.http.middlewares.auth.forwardauth.authResponseHeaders: X-User-Id,X-Organizador-Id,X-Roles
+      traefik.http.middlewares.api-chain.chain.middlewares: cors,strip-identity
+
+  identity-service:
+    build:
+      context: .
+      args:
+        SERVICE: identity-service
+    image: events/identity-service:local
+    environment:
+      <<: *service-env
+      JWT_SECRET: ${JWT_SECRET:?Configura JWT_SECRET en .env}
+      JWT_EXPIRATION_MINUTES: ${JWT_EXPIRATION_MINUTES:-120}
+      PLANNING_URL: http://planning-service:8080
+    networks: [backend]
+    restart: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.identity.loadbalancer.server.port: "8080"
+      traefik.http.services.identity.loadbalancer.healthcheck.path: /q/health/ready
+      traefik.http.services.identity.loadbalancer.healthcheck.interval: 10s
+      # identity valida el JWT por si mismo: sus rutas no pasan por forwardAuth.
+      traefik.http.routers.identity.rule: Host(`${API_DOMAIN:-localhost}`) && (PathPrefix(`/api/auth`) || PathPrefix(`/api/admin`) || PathPrefix(`/identity`))
+      traefik.http.routers.identity.service: identity
+      traefik.http.routers.identity.middlewares: api-chain@docker
+
+  planning-service:
+    build:
+      context: .
+      args:
+        SERVICE: planning-service
+    image: events/planning-service:local
+    environment:
+      <<: *service-env
+    networks: [backend]
+    restart: unless-stopped
+    labels:
+      traefik.enable: "true"
+      traefik.http.services.planning.loadbalancer.server.port: "8080"
+      traefik.http.services.planning.loadbalancer.healthcheck.path: /q/health/ready
+      traefik.http.services.planning.loadbalancer.healthcheck.interval: 10s
+      # /internal no se enruta: solo identity-service lo consume dentro de la red privada.
+      traefik.http.routers.planning.rule: Host(`${API_DOMAIN:-localhost}`) && (PathPrefix(`/api/events`) || PathPrefix(`/api/subtasks`) || PathPrefix(`/api/capacity`) || PathPrefix(`/api/today`))
+      traefik.http.routers.planning.service: planning
+      traefik.http.routers.planning.middlewares: api-chain@docker,auth@docker
+      traefik.http.routers.planning-docs.rule: Host(`${API_DOMAIN:-localhost}`) && PathPrefix(`/planning`)
+      traefik.http.routers.planning-docs.service: planning
+      traefik.http.routers.planning-docs.middlewares: api-chain@docker
+
+networks:
+  backend:
+    name: events-platform_backend

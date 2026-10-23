@@ -5,6 +5,16 @@ logistico, ver la vista "Hoy" con lo urgente, reprogramar ante imprevistos detec
 sobrecarga diaria, y registrar la ejecucion con barra de progreso. Desarrollada con Java 21 y
 Quarkus 3.40.1 (JVM) siguiendo una arquitectura hexagonal, y persistida en Supabase (Postgres).
 
+El backend esta dividido en dos microservicios detras de un gateway Traefik
+([docs/microservicios.md](docs/microservicios.md)):
+
+| Servicio | Bounded context | Rutas |
+|---|---|---|
+| `identity-service` | Identidad y acceso: cuentas, roles, JWT | `/api/auth/**`, `/api/admin/**` |
+| `planning-service` | Planificacion: eventos, subtareas, capacidad, hoy | `/api/events/**`, `/api/subtasks/**`, `/api/capacity`, `/api/today` |
+
+El frontend sigue llamando a las mismas rutas `/api/...` en un unico dominio.
+
 Este proyecto es la refactorizacion de `Back-Task` para cumplir el backlog del mini-proyecto
 "Organizador de Eventos Independientes" (US-01 a US-12, TS-01 a TS-03).
 
@@ -24,6 +34,7 @@ con JWT (Bearer, HS256): registro, login, roles (`ORGANIZADOR`, `ADMIN`) y rutas
 Cada usuario solo ve y modifica sus propios eventos, subtareas y capacidad diaria.
 
 - Arquitectura: [docs/arquitectura.md](docs/arquitectura.md)
+- Microservicios, gateway y despliegue en VPS: [docs/microservicios.md](docs/microservicios.md)
 - Esquema SQL (usuarios, roles y modelo de negocio): [docs/schema.sql](docs/schema.sql)
 - Contratos para el front (auth + todos los endpoints): [docs/contratos-frontend.md](docs/contratos-frontend.md)
 
@@ -33,40 +44,49 @@ Cada usuario solo ve y modifica sus propios eventos, subtareas y capacidad diari
 - Maven Wrapper incluido (`mvnw`/`mvnw.cmd`), con Maven 3.9.16; no necesitas instalar Maven por separado.
 - Un proyecto de Supabase (o cualquier Postgres accesible)
 
-El wrapper descarga Maven en el primer uso. Para iniciar desde la carpeta `backend-quarkus`:
+El wrapper descarga Maven en el primer uso. La forma recomendada de levantar todo en local
+(gateway + ambos servicios) es Docker Compose, ver [Docker](#docker). Para trabajar en un solo
+servicio desde la carpeta `backend-quarkus`:
 
 ```bash
-./mvnw quarkus:dev
+./mvnw -pl identity-service quarkus:dev
+PORT=8081 ./mvnw -pl planning-service quarkus:dev
 ```
 
-En Windows: `.\mvnw.cmd quarkus:dev`. Java debe estar disponible en PATH o mediante
+Sin el gateway, `planning-service` no recibe la identidad: las rutas de negocio responden 401
+salvo que se envien a mano los headers `X-User-Id`, `X-Organizador-Id` y `X-Roles`.
+
+En Windows: `.\mvnw.cmd -pl identity-service quarkus:dev`. Java debe estar disponible en PATH o mediante
 JAVA_HOME, y la base de datos debe tener el esquema indicado abajo. Si el wrapper indica
 que JAVA_HOME no está definido correctamente, configurar la carpeta del JDK antes de ejecutar:
 
 ```bash
 export JAVA_HOME=/ruta/al/jdk
-./mvnw quarkus:dev
+./mvnw -pl identity-service quarkus:dev
 ```
 
 ## Configuracion
 
-La configuración vive en `src/main/resources/application.yml`, con perfiles `%dev` y
-`%test`. La extensión `quarkus-config-yaml` permite que Quarkus la cargue.
+La configuración de cada servicio vive en `<servicio>/src/main/resources/application.yml`,
+con perfiles `%dev` y `%test`. La extensión `quarkus-config-yaml` permite que Quarkus la cargue.
 
 Copia `.env.example` a `.env` y completa los valores de tu base de datos. `.env` esta en
 `.gitignore`: nunca subas credenciales reales al repositorio.
 
 | Variable | Valor predeterminado | Descripcion |
 |---|---|---|
-| `PORT` | `8080` | Puerto en el que se ejecuta la API. |
-| `CORS_ORIGIN` | `http://localhost:4200,https://frontend-pi-olive-30.vercel.app` | Origenes autorizados, separados por comas, sin ruta ni barra final. |
+| `PORT` | `8080` | Puerto de cada servicio dentro de su contenedor. |
+| `API_DOMAIN` | `localhost` | Dominio publico que atiende Traefik. |
+| `ACME_EMAIL` | *(solo produccion)* | Correo para los certificados de Let's Encrypt. |
+| `CORS_ORIGIN` | `http://localhost:4200` | Origenes autorizados por el gateway, separados por comas, sin ruta ni barra final. |
+| `PLANNING_URL` | `http://planning-service:8080` | URL interna de planning que usa identity antes de borrar cuentas. |
 | `DB_URL` | *(localhost, no funcional)* | Cadena JDBC de conexion a Postgres/Supabase. |
 | `DB_USERNAME` | *(localhost, no funcional)* | Usuario de la base de datos. |
 | `DB_PASSWORD` | *(localhost, no funcional)* | Password de la base de datos. |
 
-Para el backend desplegado, configura `CORS_ORIGIN=https://frontend-pi-olive-30.vercel.app`
-y vuelve a desplegarlo. Esta variable reemplaza los origenes predeterminados, incluido
-cuando se carga desde `.env`.
+CORS lo aplica Traefik una sola vez para toda la API; los servicios lo tienen desactivado para
+no duplicar cabeceras. Para el backend desplegado, configura
+`CORS_ORIGIN=https://frontend-pi-olive-30.vercel.app` en `.env` y recrea el contenedor de Traefik.
 
 Quarkus lee `.env` en desarrollo. Para ejecutar el JAR JVM, exporta las variables antes de ejecutar:
 
@@ -95,7 +115,7 @@ Variables de seguridad:
 
 | Variable | Valor predeterminado | Descripcion |
 |---|---|---|
-| `JWT_SECRET` | *(obligatoria)* | Clave HS256 para firmar tokens, minimo 32 bytes UTF-8. **Obligatoria en produccion.** |
+| `JWT_SECRET` | *(obligatoria)* | Clave HS256 para firmar tokens, minimo 32 bytes UTF-8. Solo la usa `identity-service`. **Obligatoria en produccion.** |
 | `JWT_EXPIRATION_MINUTES` | `120` | Vigencia del token de acceso. |
 
 ## Documentacion interactiva
@@ -109,10 +129,14 @@ pero una tabla existente puede conservar la restriccion `NOT NULL`.
 El script elimina esa restriccion sin cambiar los datos y consulta `is_nullable`, que debe
 mostrar `YES`. Luego vuelve a intentar crear el evento; este cambio no requiere redespliegue.
 
-Con la aplicacion en ejecucion:
+Con la plataforma en ejecucion (a traves del gateway):
 
-- Swagger UI: http://localhost:8080/swagger-ui.html
-- Contrato OpenAPI: http://localhost:8080/api-docs
+- Swagger UI identidad: http://localhost/identity/swagger-ui
+- Swagger UI planificacion: http://localhost/planning/swagger-ui
+- Contratos OpenAPI: http://localhost/identity/api-docs y http://localhost/planning/api-docs
+
+En ambos, **Authorize** con el `accessToken` de login: Swagger lo envia como Bearer y el
+gateway lo valida antes de llegar a planning.
 
 ## Endpoints
 
@@ -121,7 +145,8 @@ errores usan `{ success: false, message, timestamp }` (409 de conflicto de capac
 ademas `plannedHours`, `limitHours`, `exceedsBy`).
 
 Todas las rutas `/api/**` exigen `Authorization: Bearer <token>`, excepto registro y login.
-Los permisos se consultan en BD en cada petición. Las rutas de negocio exigen ORGANIZADOR
+Los permisos se consultan en BD en cada petición: identity lo hace directamente y, para las
+rutas de planning, Traefik le consulta `/api/auth/verify` (forwardAuth) antes de reenviar. Las rutas de negocio exigen ORGANIZADOR
 con perfil activo. El JWT identifica al usuario; el UUID del organizador es independiente.
 La eliminación devuelve 409 si existen eventos/capacidades o se trata del último ADMIN habilitado.
 
@@ -176,20 +201,21 @@ menos horas (reducir), que es la misma operacion sin conflicto.
 ./mvnw verify
 ```
 
-Ejecuta las pruebas unitarias (dominio y casos de uso), las reglas de ArchUnit y el chequeo de
-cobertura de JaCoCo. El reporte HTML se genera en `target/site/jacoco/index.html`.
+Ejecuta, en ambos servicios, las pruebas unitarias (dominio y casos de uso), las reglas de
+ArchUnit y el chequeo de cobertura de JaCoCo. El reporte HTML se genera en
+`<servicio>/target/site/jacoco/index.html`.
 
 Para comprobar el SQL, JPA y flujos HTTP sobre PostgreSQL, crea una base **vacía y desechable**
 con nombre `events_test_*` y ejecuta:
 
 ```bash
 TEST_DB_URL=jdbc:postgresql://localhost:5432/events_test_users \
-TEST_DB_USERNAME=postgres TEST_DB_PASSWORD=postgres ./mvnw -Ppostgres-it verify
+TEST_DB_USERNAME=postgres TEST_DB_PASSWORD=postgres ./mvnw -pl identity-service -Ppostgres-it verify
 ```
 
-Este perfil aplica `docs/schema.sql`, valida el modelo JPA y limpia los datos entre pruebas.
+Este perfil (solo `identity-service`; planning-service se simula) aplica `docs/schema.sql`, valida el modelo JPA y limpia los datos entre pruebas.
 Necesita una base vacía nueva en cada ejecución; no debe apuntar a la base de la aplicación.
-Las pruebas verifican aislamiento multiusuario, CRUD/perfil, roles actuales con JWT existente,
+Las pruebas verifican los headers de identidad para el gateway, CRUD/perfil, roles actuales con JWT existente,
 contraseñas BCrypt, bloqueos de eliminación y concurrencia de registros/bajas de ADMIN.
 
 El umbral de cobertura (60% lineas / 50% ramas) aplica sobre la capa de
@@ -200,7 +226,15 @@ en pruebas unitarias aisladas.
 ## Arquitectura
 
 ```text
-src/main/java/com/events
+backend-quarkus
+├── pom.xml                 POM padre (multi-modulo)
+├── identity-service/       Usuario, Rol, Organizador (perfil), JWT, /api/auth/verify
+├── planning-service/       Evento, Subtarea, CapacidadDiaria, Hoy, /internal/...
+├── Dockerfile              Imagen de cualquiera de los dos (--build-arg SERVICE=...)
+├── compose.yaml            Traefik + ambos servicios (local)
+└── compose.prod.yaml       Override para el VPS: HTTPS con Let's Encrypt
+
+<servicio>/src/main/java/com/events
 ├── domain          Entidades Java puras y excepciones de negocio
 ├── application     Puertos de entrada, puertos de salida y casos de uso
 └── infrastructure  Controladores REST, DTO, mapeadores, persistencia JPA y configuracion
@@ -216,22 +250,24 @@ Los productores CDI componen los casos de uso; Narayana gestiona las transaccion
 
 ```bash
 ./mvnw package
-java -Duser.timezone=America/Bogota -jar target/quarkus-app/quarkus-run.jar
+java -Duser.timezone=America/Bogota -jar identity-service/target/quarkus-app/quarkus-run.jar
 ```
 
-Distribuye toda la carpeta `target/quarkus-app/`, no únicamente el JAR. Proporciona
-`DB_URL`, `DB_USERNAME`, `DB_PASSWORD` y `JWT_SECRET` externamente. El esquema se valida
-al arrancar. Health nativo: `/q/health`; compatibilidad: `/actuator/health` y `/actuator/info`.
+Distribuye toda la carpeta `<servicio>/target/quarkus-app/`, no únicamente el JAR. Proporciona
+`DB_URL`, `DB_USERNAME`, `DB_PASSWORD` (y `JWT_SECRET` en identity) externamente. El esquema se
+valida al arrancar. Health nativo: `/q/health`; compatibilidad: `/actuator/health` y `/actuator/info`.
 
 ## Docker
 
 ```bash
-./mvnw clean package
-docker build -t events-api .
-docker run --rm -p 8080:8080 --env-file .env events-api
-# Alternativa con Supabase externa:
-docker compose up --build -d
+cp .env.example .env            # completar valores
+docker compose up -d --build    # local: http://localhost
+# VPS con HTTPS (API_DOMAIN y ACME_EMAIL en .env):
+docker compose -f compose.yaml -f compose.prod.yaml up -d --build
 ```
+
+Solo Traefik publica puertos (80/443). Los servicios quedan en la red privada `backend`.
+Guia paso a paso del VPS en [docs/microservicios.md](docs/microservicios.md#despliegue-en-el-vps).
 
 Para actualizar una base que ya usa el esquema actual, ejecutar
 [docs/migrations/001_logout.sql](docs/migrations/001_logout.sql) antes de desplegar logout.
@@ -240,5 +276,4 @@ invalida el JWT actual en BD, incluso tras reinicios y entre instancias; otros t
 vigentes. Detalle y respuestas JSON en [docs/auth.md](docs/auth.md).
 
 El Dockerfile compila con JDK 21 y ejecuta el fast-jar con JRE 21 y usuario no root.
-La imagen y Compose requieren Docker; su ejecución no se verificó en el equipo de migración.
-Informe y límites: [migration-summary.md](migration-summary.md).
+Informe de la migración a Quarkus: [migration-summary.md](migration-summary.md).
