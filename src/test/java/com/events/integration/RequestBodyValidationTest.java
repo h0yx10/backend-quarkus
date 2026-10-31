@@ -82,6 +82,16 @@ class RequestBodyValidationTest {
     }
 
     @Test
+    void unaSubtareaInicialInvalidaRechazaElEventoCompleto() throws Exception {
+        mvc.perform(post("/api/events").header("Authorization", auth).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nombre\":\"Feria\",\"tipo\":\"Social\",\"fechaHora\":\"2026-12-01T12:00:00\","
+                                + "\"subtareas\":[{\"name\":\"\",\"targetDate\":\"2026-11-20\",\"estimatedHours\":0}]}"))
+                .andExpect(status().isBadRequest());
+        mvc.perform(get("/api/events").header("Authorization", auth))
+                .andExpect(jsonPath("$.data.length()").value(1));
+    }
+
+    @Test
     void unaNotaDeMasDeMilCaracteresDevuelve400() throws Exception {
         String subtareaId = crearSubtarea("Salon");
         mvc.perform(patch("/api/subtasks/" + subtareaId + "/status").header("Authorization", auth).contentType(MediaType.APPLICATION_JSON)

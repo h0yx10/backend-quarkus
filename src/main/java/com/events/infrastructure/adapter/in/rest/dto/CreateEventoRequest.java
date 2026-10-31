@@ -40,7 +40,6 @@ public record CreateEventoRequest(
         @Schema(example = "2026-05-15T23:59:00")
         LocalDateTime plazoLimite,
 
-        @Valid
-        List<SubtareaInicialRequest> subtareas
+        List<@Valid SubtareaInicialRequest> subtareas
 ) {
 }
